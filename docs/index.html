@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Understand Moguri's models, execution environments, permissions, shared interfaces, and current development status.">
+  <meta name="description" content="Moguri's session settings, model connections, execution environments, and tool approvals, with current development status.">
   <meta name="theme-color" content="#F4EFE9">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Know your harness | Moguri docs">
-  <meta property="og:description" content="A guide to Moguri's controls and what is available in the current implementation.">
+  <meta property="og:title" content="How Moguri works | Moguri docs">
+  <meta property="og:description" content="Learn how Moguri connects to models, runs coding sessions, and handles approvals.">
   <meta property="og:url" content="https://moguri.synctune.it/docs/">
   <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
   <meta property="og:image:alt" content="Moguri's mascot and wordmark: Power on your terms.">
@@ -19,13 +19,13 @@
   <link rel="preload" href="../assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="../assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="../styles.css">
-  <title>Know your harness | Moguri docs</title>
+  <title>How Moguri works | Moguri docs</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header shell">
     <a class="brand" href="../" aria-label="Moguri home"><img class="brand-face" src="../assets/favicon.svg" width="36" height="36" alt=""><img class="brand-wordmark" src="../assets/wordmark.svg" width="128" height="40" alt="Moguri"></a>
-    <nav class="site-nav" aria-label="Primary"><a href="../#harness">The harness</a><a href="../#interfaces">Interfaces</a><a href="./" aria-current="page">Docs</a></nav>
+    <nav class="site-nav" aria-label="Primary"><a href="../#harness">How it works</a><a href="../#interfaces">Interfaces</a><a href="./" aria-current="page">Docs</a></nav>
     <a class="header-github" href="https://github.com/moguri-dev">GitHub <span aria-hidden="true">&#8599;</span></a>
   </header>
 
@@ -36,63 +36,63 @@
     </aside>
     <article class="docs-article">
       <span class="status"><span class="beacon" aria-hidden="true"></span>In development</span>
-      <h1>Know your harness.</h1>
-      <p class="docs-lead">Moguri puts models, tools, and execution environments under your control. This guide explains those choices, not an installation for a finished release.</p>
+      <h1>How Moguri works</h1>
+      <p class="docs-lead">This guide covers the settings and behavior of the current Moguri development build.</p>
 
       <section class="docs-section" id="overview" aria-labelledby="overview-title">
-        <h2 id="overview-title">One shared core</h2>
-        <p>Moguri is an opinionated AI harness for serious engineering work. Its desktop app, CLI, and terminal UI use the same SDK and one local service that owns session history and approvals.</p>
-        <p>The core exposes four independent controls: <strong>Env</strong>, <strong>Model</strong>, <strong>Autonomy level</strong>, and <strong>Budget</strong>. Starting defaults are Local, no selected model, Manual, and Unlimited. Saved profile or project settings can change those defaults.</p>
-        <div class="docs-callout"><strong>Independent means independent.</strong> Choosing a model doesn't grant it permissions. Choosing SSH doesn't make work sandboxed. Changing a profile doesn't bypass global guardrails.</div>
+        <h2 id="overview-title">Sessions and settings</h2>
+        <p>The desktop app, CLI, and terminal UI connect through the SDK to a local service. The service saves session history and handles approvals.</p>
+        <p>Each session has four separate controls: <strong>Env</strong>, <strong>Model</strong>, <strong>Autonomy level</strong>, and <strong>Budget</strong>. New sessions start with Local execution, no model selected, Manual autonomy, and an Unlimited budget. Global, profile, and project settings can change these defaults.</p>
+        <div class="docs-callout">Model selection doesn't grant tool permissions. Switching profiles doesn't bypass global restrictions.</div>
       </section>
 
       <section class="docs-section" id="models" aria-labelledby="models-title">
         <h2 id="models-title">Choose your model</h2>
-        <p>The current implementation supports GitHub Copilot device sign-in and models enabled for that account. It also supports explicitly configured OpenAI-compatible endpoints, including local model servers.</p>
-        <p>You configure the endpoint and choose an available model. Endpoint discovery doesn't scan hosts, download weights, or start a model for you. A disabled or unavailable selection requires your attention rather than silently switching providers.</p>
+        <p>Sign in with GitHub Copilot to use models available to your account. You can also configure an OpenAI-compatible endpoint for a local or hosted model server.</p>
+        <p>You choose the endpoint and model. Moguri doesn't scan hosts, download weights, or start model servers. It doesn't silently replace a disabled or unavailable model with a different provider.</p>
         <h3>About Kupo</h3>
-        <p>Kupo is Moguri's automatic routing system, separate from fixed-model selection. Its advanced workflows and budget-aware completion still have qualification gates; they aren't a promise that every routing mode is ready for public use.</p>
+        <p>Kupo selects models automatically from configured choices. Advanced workflows and budget-aware completion still need release validation.</p>
       </section>
 
       <section class="docs-section" id="execution" aria-labelledby="execution-title">
         <h2 id="execution-title">Choose where work runs</h2>
         <dl class="docs-definitions">
-          <dt>Local</dt><dd>Work runs on your machine within the selected session and workspace. File and command permissions still apply. Ordinary Local execution is not a whole-system sandbox.</dd>
-          <dt>Remote / SSH</dt><dd>You explicitly configure and pin a host and workspace. Model calls and file or command tools execute there, while the local service retains approvals and history. Remote work doesn't silently move back to your laptop.</dd>
-          <dt>Sandbox</dt><dd>Managed sandbox execution requires separate reviewed setup and an appropriately qualified runtime. An environment label alone is not proof of containment. Current native qualification and full milestone acceptance remain in progress.</dd>
+          <dt>Local</dt><dd>Local mode runs on your machine. Workspace and tool permissions apply, but the mode doesn't provide whole-system isolation.</dd>
+          <dt>Remote / SSH</dt><dd>Pin a remote host and choose its workspace. Model calls, file operations, and commands run there. The local service keeps history and approvals. Moguri doesn't move remote work back to your laptop if the connection breaks.</dd>
+          <dt>Sandbox</dt><dd>Sandbox needs separate setup approval and a runtime that has passed containment checks. Selecting the environment alone doesn't verify containment. Native release validation is still in progress.</dd>
         </dl>
-        <div class="docs-callout"><strong>SSH is a location, not an isolation guarantee.</strong> Local and SSH own known process groups. Whole-descendant containment requires separately qualified sandbox support.</div>
+        <div class="docs-callout">Local and SSH track known process groups. They do not guarantee containment of every child process. That requires a sandbox runtime that has passed its checks.</div>
       </section>
 
       <section class="docs-section" id="permissions" aria-labelledby="permissions-title">
-        <h2 id="permissions-title">Keep approvals explicit</h2>
-        <p>Manual is the starting autonomy level. Guided work can recommend a choice while leaving the actual answer or approval to you. Higher autonomy doesn't override hard denials, read-only boundaries, allowed-environment policies, or supported budget limits.</p>
-        <p>Inspect tool arguments and results, keep drafts and queued prompts across restarts, and distinguish Queue, Steer, and Interrupt delivery. A plan or an estimate is not evidence that the work is complete.</p>
-        <p>Budgets can limit cumulative tokens, estimated cost, or both where the provider supplies the necessary telemetry. Unknown usage or cost remains unknown, and a cap can interrupt work.</p>
+        <h2 id="permissions-title">Approvals and budgets</h2>
+        <p>Manual mode leaves tool approvals to you. Guided mode can recommend an answer, but you still make the choice. Higher autonomy doesn't override hard denials, read-only rules, environment restrictions, or budget caps.</p>
+        <p>Tool calls show their arguments and results. Moguri saves drafts and queued prompts across restarts. Queue, Steer, and Interrupt deliver active prompts in different ways. A plan or estimate doesn't confirm that work is done.</p>
+        <p>Budgets can cap cumulative tokens, estimated cost, or both when provider telemetry is available. Reaching a cap can interrupt work. Missing usage or cost stays unknown.</p>
       </section>
 
       <section class="docs-section" id="interfaces" aria-labelledby="docs-interfaces-title">
-        <h2 id="docs-interfaces-title">Use the interface that fits</h2>
-        <h3>Desktop</h3><p>The Electron desktop app brings conversations, projects, files, code changes, approvals, and session tools into one workspace. The current native delivery is a macOS alpha, not a completed public v1.</p>
-        <h3>Terminal</h3><p>The OpenTUI client offers keyboard-first conversations, streamed replies, expandable tool output, and shared session controls. The CLI reaches the same service and SDK without requiring the desktop interface.</p>
-        <h3>SDK</h3><p>The importable SDK powers Moguri's own clients. It shares session controls, permissions, model settings, tooling, and integrations, including a native MCP gateway. Public package distribution is still being prepared.</p>
+        <h2 id="docs-interfaces-title">Desktop, terminal, and SDK</h2>
+        <h3 id="desktop">Desktop</h3><p>The Electron app shows conversations, project files, code changes, and tool requests. The current native build is a macOS alpha.</p>
+        <h3 id="terminal">Terminal</h3><p>The OpenTUI terminal client streams replies and shows expandable tool output. CLI commands use the same service without starting the desktop app.</p>
+        <h3 id="sdk">SDK</h3><p>The SDK has session, model, permission, and tool APIs used by Moguri's clients. It includes a native MCP gateway. Public package distribution is still in progress.</p>
       </section>
 
       <section class="docs-section" id="availability" aria-labelledby="availability-title">
         <h2 id="availability-title">Development and availability</h2>
-        <p>The desktop, CLI, TUI, and shared SDK are implemented in the current source. The first milestone remains incomplete, with exact native qualification and broader distribution still being worked through.</p>
-        <p>The organization roadmap includes mobile clients, IDE tools, and dedicated component repositories. Planned repository locations aren't treated as available downloads here.</p>
-        <div class="docs-callout"><strong>No public installer is offered on this site yet.</strong> Follow <a href="https://github.com/moguri-dev">Moguri on GitHub</a> for public repositories and release announcements.</div>
+        <p>The current codebase includes the desktop app, CLI, TUI, and SDK. The first milestone isn't complete. Native runtime validation and public distribution are still pending.</p>
+        <p>Mobile clients and IDE tools are on the roadmap. Links to their public repositories will go here once they're available.</p>
+        <div class="docs-callout">There's no public installer on this site yet. See <a href="https://github.com/moguri-dev">Moguri on GitHub</a> for public repositories and release updates.</div>
         <h3>Common questions</h3>
-        <details class="faq"><summary>Can I use a local model?</summary><p>Yes, the current source supports explicitly configured OpenAI-compatible endpoints. You provide and run the compatible model server; Moguri doesn't silently install weights or choose a model.</p></details>
-        <details class="faq"><summary>Is remote execution sandboxed?</summary><p>Not merely because it uses SSH. Remote selects an explicitly pinned machine and workspace. Qualified sandbox containment is a separate setup and policy decision.</p></details>
-        <details class="faq"><summary>Are the homepage previews real screenshots?</summary><p>No. They are clearly labeled interface illustrations. They explain the shared controls without presenting invented output or a mock conversation as evidence of a product run.</p></details>
+        <details class="faq"><summary>Can I use a local model?</summary><p>Yes, if you run a model server with an OpenAI-compatible API. You configure the endpoint and select a model. Moguri doesn't download weights or start the server.</p></details>
+        <details class="faq"><summary>Is remote execution sandboxed?</summary><p>SSH alone doesn't sandbox the work. It runs on the host you selected. Sandbox containment requires separate setup approval and runtime validation.</p></details>
+        <details class="faq"><summary>Are the previews app screenshots?</summary><p>No. They're interface illustrations, not captures from a running app.</p></details>
       </section>
     </article>
   </main>
 
   <footer class="site-footer shell">
-    <div><a class="footer-brand" href="../"><img src="../assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>Power on your terms.</p></div>
+    <div><a class="footer-brand" href="../"><img src="../assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>AI coding for desktop and terminal.</p></div>
     <nav aria-label="Footer"><a href="../">Home</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source</a><a href="https://github.com/synctune-io">A Synctune project <span aria-hidden="true">&#8599;</span></a></nav>
   </footer>
 </body>

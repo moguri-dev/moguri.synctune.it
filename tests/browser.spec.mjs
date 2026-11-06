@@ -13,7 +13,7 @@ test("the homepage loads local assets without runtime errors", async ({ page }, 
   await page.goto("/");
   await page.waitForLoadState("networkidle");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your AI.Your terms.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("AI coding workspace");
   await expect(page.getByText("In development", { exact: true })).toBeVisible();
   const images = await page.locator("img").evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0));
   expect(images).toBe(true);
@@ -32,7 +32,7 @@ test("interface tabs support mouse and the complete keyboard pattern", async ({ 
   await expect(page.getByRole("tabpanel")).toHaveCount(1);
   await terminal.click();
   await expect(terminal).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel")).toContainText("Stay in");
+  await expect(page.getByRole("tabpanel")).toContainText("Chats in the terminal");
   await terminal.press("ArrowRight");
   await expect(sdk).toBeFocused();
   await expect(sdk).toHaveAttribute("aria-selected", "true");
@@ -47,7 +47,7 @@ test("interface tabs support mouse and the complete keyboard pattern", async ({ 
   await sdk.press("Tab");
   await expect(page.getByRole("tabpanel")).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "About the interfaces" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "SDK guide" })).toBeFocused();
 });
 
 test("the skip link and docs navigation work with a keyboard", async ({ page }) => {
@@ -97,7 +97,7 @@ test("all interface content remains available without JavaScript", async ({ brow
     await expect(page.locator(".interface-panel")).toHaveCount(3);
     for (const panel of await page.locator(".interface-panel").all()) await expect(panel).toBeVisible();
     await page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Docs", exact: true }).click();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Know your harness.");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("How Moguri works");
   } finally {
     await context.close();
   }
@@ -153,7 +153,7 @@ test("the preview serves correct errors and never publishes source files", async
   for (const path of ["/not-a-page", "/missing/nested/page", "/package.json", "/README.md", "/docs/development.md", "/.git/config", "/tests/site.test.mjs", "/%2e%2e%2fpackage.json"]) {
     const response = await request.get(path);
     expect(response.status()).toBe(404);
-    expect(await response.text()).toContain("Wrong turn.");
+    expect(await response.text()).toContain("<h1>Page not found</h1>");
   }
   expect((await request.get("/%E0%A4%A")).status()).toBe(400);
   expect((await request.get("/%00")).status()).toBe(400);
