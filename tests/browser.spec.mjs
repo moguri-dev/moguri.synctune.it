@@ -16,11 +16,16 @@ test("the homepage loads local assets without runtime errors", async ({ page }, 
   await page.evaluate(() => document.fonts.ready);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("AI coding workspace");
   await expect(page.getByText("In development", { exact: true })).toBeVisible();
+  for (const image of await page.locator("img[loading='lazy']").all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0)).toBe(true);
+  }
   const images = await page.locator("img").evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0));
   expect(images).toBe(true);
   expect(errors).toEqual([]);
   expect(failed).toEqual([]);
   expect(requests.every((url) => url.startsWith("http://127.0.0.1:4187/"))).toBe(true);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: testInfo.outputPath("moguri-home-desktop.png"), fullPage: true, animations: "disabled" });
 });
 
@@ -177,4 +182,31 @@ test("usage guides and their chapter navigation work without custom controls", a
   await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Set budget limits", exact: true }).click();
   await expect(page).toHaveURL(/#set-budget-limits$/);
   await expect(page.getByRole("heading", { name: "Set budget limits", exact: true })).toBeInViewport();
+});
+
+test("all three real app screenshots load responsively and open at full size", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto("/");
+  const links = page.locator(".screenshot-link");
+  await expect(links).toHaveCount(3);
+  await expect(page.locator(".mock-desktop")).toHaveCount(0);
+  for (const link of await links.all()) {
+    const image = link.locator("img");
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toHaveAttribute("loading", "lazy");
+    await expect(image).toHaveAttribute("width", "2880");
+    await expect(image).toHaveAttribute("height", "2000");
+    await expect(image).toHaveAttribute("srcset", /960w.*1440w.*2880w/);
+    await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0)).toBe(true);
+    await link.focus();
+    await expect(link).toBeFocused();
+    const response = await page.request.get(await link.getAttribute("href"));
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toContain("image/png");
+    const bytes = await response.body();
+    expect(bytes.readUInt32BE(16)).toBe(2880);
+    expect(bytes.readUInt32BE(20)).toBe(2000);
+  }
+  await page.getByRole("link", { name: "Open the Moguri model-controls screenshot at full size", exact: true }).press("Enter");
+  await expect(page).toHaveURL(/\/assets\/screenshots\/moguri-model-controls\.png$/);
 });

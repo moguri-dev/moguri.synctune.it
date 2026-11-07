@@ -34,8 +34,11 @@ for (const page of pages) {
 
   test(`${page} has no broken local links or assets`, async () => {
     const html = await read(page);
-    for (const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
-      const reference = match[1];
+    const references = [
+      ...[...html.matchAll(/\b(?:href|src)="([^"]+)"/g)].map((match) => match[1]),
+      ...[...html.matchAll(/\bsrcset="([^"]+)"/g)].flatMap((match) => match[1].split(",").map((entry) => entry.trim().split(/\s+/)[0])),
+    ];
+    for (const reference of references) {
       const url = new URL(reference, new URL(page, origin));
       if (url.origin !== new URL(origin).origin) {
         assert.equal(url.protocol, "https:", `Insecure external reference: ${reference}`);

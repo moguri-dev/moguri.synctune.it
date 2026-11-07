@@ -127,19 +127,13 @@
               <li>File and code-change views follow the selected session.</li>
             </ul>
             <a class="text-link" href="docs/getting-started.html#desktop-app">Desktop guide <span aria-hidden="true">&rarr;</span></a>
+            <a class="text-link" href="#screenshots">More desktop screenshots <span aria-hidden="true">&darr;</span></a>
           </div>
-          <figure class="interface-preview">
-            <div class="preview-title"><span class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Desktop / workspace illustration</span></div>
-            <div class="mock-desktop" aria-hidden="true">
-              <div class="mock-sidebar"><strong>Workspaces</strong><span class="mock-selected">sample-app</span><span>New session</span><span>Project notes</span></div>
-              <div class="mock-conversation">
-                <div class="mock-session-title">Read project setup</div>
-                <p class="mock-prompt">Read the setup instructions before editing files.</p>
-                <div class="mock-response"><img src="assets/favicon.svg" width="28" height="28" alt=""><p>I'll read the project files first, then propose a change for you to review.</p></div>
-                <div class="mock-composer"><span>Write a message</span><div><b>Local</b><b>Model</b><b>Manual</b></div></div>
-              </div>
-            </div>
-            <figcaption>Desktop illustration. The app is currently a macOS alpha.</figcaption>
+          <figure class="interface-preview native-preview">
+            <a class="screenshot-link" href="assets/screenshots/moguri-workspace-dark.png" aria-label="Open the dark-mode Moguri screenshot at full size">
+              <img src="assets/screenshots/moguri-workspace-dark-1440.png" srcset="assets/screenshots/moguri-workspace-dark-960.png 960w, assets/screenshots/moguri-workspace-dark-1440.png 1440w, assets/screenshots/moguri-workspace-dark.png 2880w" sizes="(min-width: 1280px) 650px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri desktop in dark mode, showing a synthetic demo conversation, project sessions, and model controls.">
+            </a>
+            <figcaption>Captured from Moguri 0.31 alpha. Real app UI with synthetic demo data. Select the image for full size.</figcaption>
           </figure>
         </section>
 
@@ -188,6 +182,28 @@
             <figcaption>Client architecture. The SDK isn't publicly distributed yet.</figcaption>
           </figure>
         </section>
+      </div>
+    </section>
+
+    <section class="screenshots-section shell section-space" id="screenshots" aria-labelledby="screenshots-title">
+      <div class="section-intro">
+        <p class="section-label">Desktop screenshots</p>
+        <h2 id="screenshots-title">Light mode and model controls</h2>
+        <p>Captured from the running Moguri 0.31 alpha app in an isolated demo. Project, conversation, and usage data are synthetic. Select an image to open the full-resolution PNG.</p>
+      </div>
+      <div class="screenshot-grid">
+        <figure>
+          <a class="screenshot-link" href="assets/screenshots/moguri-workspace-light.png" aria-label="Open the light-mode Moguri screenshot at full size">
+            <img src="assets/screenshots/moguri-workspace-light-1440.png" srcset="assets/screenshots/moguri-workspace-light-960.png 960w, assets/screenshots/moguri-workspace-light-1440.png 1440w, assets/screenshots/moguri-workspace-light.png 2880w" sizes="(min-width: 1280px) 580px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri desktop in light mode with the same synthetic demo project and conversation.">
+          </a>
+          <figcaption>Light-mode workspace</figcaption>
+        </figure>
+        <figure>
+          <a class="screenshot-link" href="assets/screenshots/moguri-model-controls.png" aria-label="Open the Moguri model-controls screenshot at full size">
+            <img src="assets/screenshots/moguri-model-controls-1440.png" srcset="assets/screenshots/moguri-model-controls-960.png 960w, assets/screenshots/moguri-model-controls-1440.png 1440w, assets/screenshots/moguri-model-controls.png 2880w" sizes="(min-width: 1280px) 580px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri's model menu showing the demo model, provider-controlled effort, context window, and model details.">
+          </a>
+          <figcaption>Model and context controls</figcaption>
+        </figure>
       </div>
     </section>
 

@@ -64,8 +64,16 @@ External actions are pinned to full commit SHAs.
 Keep implemented capabilities distinct from qualification work and roadmap
 items. The current product is a development-stage macOS alpha, not a finished
 public v1. Don't add installer buttons or links to planned component repos until
-their public availability is confirmed. Interface previews are labeled
-illustrations, not screenshots or live product output.
+their public availability is confirmed. Desktop screenshots come from the
+actual Moguri 0.31.0-alpha.1 renderer using synthetic profile, project,
+conversation, and usage data. The terminal preview remains an illustration,
+and the SDK view is a diagram.
+
+Keep full-resolution captures under `assets/screenshots/` unchanged. Serve the
+960px and 1440px uncropped PNG variants with `srcset`, preserving explicit
+dimensions and lazy loading. Full-size image links open the original 2880px
+captures. Review any replacement for personal data and update the capture
+fingerprints in `tests/screenshots.test.mjs` after verifying its provenance.
 
 Moguri's approved mascot, wordmark, icons, social card, colors, and typefaces
 come from [Synctune branding](https://github.com/synctune-io/branding).
