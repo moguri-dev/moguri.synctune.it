@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Moguri's session settings, model connections, execution environments, and tool approvals, with current development status.">
+  <meta name="description" content="Moguri usage guides for setup, projects, sessions, models, permissions, SSH, tools, the CLI, and the SDK.">
   <meta name="theme-color" content="#F4EFE9">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="How Moguri works | Moguri docs">
-  <meta property="og:description" content="Learn how Moguri connects to models, runs coding sessions, and handles approvals.">
+  <meta property="og:title" content="Moguri user guide">
+  <meta property="og:description" content="Setup instructions, everyday workflows, command references, and troubleshooting for current Moguri builds.">
   <meta property="og:url" content="https://moguri.synctune.it/docs/">
   <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
   <meta property="og:image:alt" content="Moguri's mascot and wordmark: Power on your terms.">
@@ -19,7 +19,7 @@
   <link rel="preload" href="../assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="../assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="../styles.css">
-  <title>How Moguri works | Moguri docs</title>
+  <title>Moguri user guide</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -32,12 +32,17 @@
   <main id="main" tabindex="-1" class="docs-layout shell">
     <aside class="docs-nav">
       <p>In this guide</p>
-      <nav aria-label="Documentation topics"><a href="#overview">Overview</a><a href="#models">Models</a><a href="#execution">Execution</a><a href="#permissions">Permissions</a><a href="#interfaces">Interfaces</a><a href="#availability">Availability</a></nav>
+      <nav aria-label="Documentation topics"><a href="#guides">Usage guides</a><a href="#overview">Overview</a><a href="#models">Models</a><a href="#execution">Execution</a><a href="#permissions">Permissions</a><a href="#interfaces">Interfaces</a><a href="#availability">Availability</a></nav>
     </aside>
     <article class="docs-article">
       <span class="status"><span class="beacon" aria-hidden="true"></span>In development</span>
-      <h1>How Moguri works</h1>
-      <p class="docs-lead">This guide covers the settings and behavior of the current Moguri development build.</p>
+      <h1>Moguri user guide</h1>
+      <p class="docs-lead">Start with setup, then use the topic guides for everyday work and the references for exact commands. These docs describe the current development build.</p>
+
+      <section class="docs-section" id="guides" aria-labelledby="guides-title">
+        <h2 id="guides-title">Usage guides</h2>
+        <!-- USAGE_GUIDES -->
+      </section>
 
       <section class="docs-section" id="overview" aria-labelledby="overview-title">
         <h2 id="overview-title">Sessions and settings</h2>
@@ -73,9 +78,9 @@
 
       <section class="docs-section" id="interfaces" aria-labelledby="docs-interfaces-title">
         <h2 id="docs-interfaces-title">Desktop, terminal, and SDK</h2>
-        <h3 id="desktop">Desktop</h3><p>The Electron app shows conversations, project files, code changes, and tool requests. The current native build is a macOS alpha.</p>
-        <h3 id="terminal">Terminal</h3><p>The OpenTUI terminal client streams replies and shows expandable tool output. CLI commands use the same service without starting the desktop app.</p>
-        <h3 id="sdk">SDK</h3><p>The SDK has session, model, permission, and tool APIs used by Moguri's clients. It includes a native MCP gateway. Public package distribution is still in progress.</p>
+        <h3 id="desktop">Desktop</h3><p>The Electron app shows conversations, project files, code changes, and tool requests. The current native build is a macOS alpha. Read <a href="getting-started.html#desktop-app">desktop setup</a>.</p>
+        <h3 id="terminal">Terminal</h3><p>The OpenTUI terminal client streams replies and shows expandable tool output. CLI commands use the same service without starting the desktop app. Read the <a href="cli.html">CLI and shortcut reference</a>.</p>
+        <h3 id="sdk">SDK</h3><p>The SDK has session, model, permission, and tool APIs used by Moguri's clients. It includes a native MCP gateway. Public package distribution is still in progress. Read <a href="sdk.html">SDK usage</a>.</p>
       </section>
 
       <section class="docs-section" id="availability" aria-labelledby="availability-title">

@@ -1,7 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { guidePages } from "../scripts/docs.mjs";
 
-const pages = ["/", "/docs/"];
+const pages = ["/", "/docs/", ...guidePages.map((page) => `/docs/${page.slug}.html`)];
 
 test("the homepage loads local assets without runtime errors", async ({ page }, testInfo) => {
   const errors = [];
@@ -97,7 +98,7 @@ test("all interface content remains available without JavaScript", async ({ brow
     await expect(page.locator(".interface-panel")).toHaveCount(3);
     for (const panel of await page.locator(".interface-panel").all()) await expect(panel).toBeVisible();
     await page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Docs", exact: true }).click();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("How Moguri works");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Moguri user guide");
   } finally {
     await context.close();
   }
@@ -150,7 +151,7 @@ test("the preview serves correct errors and never publishes source files", async
   const directory = await request.get("/docs?topic=models", { maxRedirects: 0 });
   expect(directory.status()).toBe(301);
   expect(directory.headers().location).toBe("/docs/?topic=models");
-  for (const path of ["/not-a-page", "/missing/nested/page", "/package.json", "/README.md", "/docs/development.md", "/.git/config", "/tests/site.test.mjs", "/%2e%2e%2fpackage.json"]) {
+  for (const path of ["/not-a-page", "/missing/nested/page", "/package.json", "/README.md", "/docs/development.md", "/docs/layout.html", "/docs/usage/getting-started.md", "/scripts/docs.mjs", "/.git/config", "/tests/site.test.mjs", "/%2e%2e%2fpackage.json"]) {
     const response = await request.get(path);
     expect(response.status()).toBe(404);
     expect(await response.text()).toContain("<h1>Page not found</h1>");
@@ -160,4 +161,20 @@ test("the preview serves correct errors and never publishes source files", async
   const unsupported = await request.post("/");
   expect(unsupported.status()).toBe(405);
   expect(unsupported.headers().allow).toBe("GET, HEAD");
+});
+
+test("usage guides and their chapter navigation work without custom controls", async ({ page }) => {
+  await page.goto("/docs/");
+  await page.locator(".docs-guide-grid").getByRole("link", { name: /^Getting started/ }).click();
+  await expect(page).toHaveURL(/\/docs\/getting-started\.html$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Getting started");
+  const menu = page.locator(".docs-guide-menu > summary");
+  await menu.focus();
+  await menu.press("Enter");
+  await expect(page.locator(".docs-guide-menu")).toHaveAttribute("open", "");
+  await page.getByRole("navigation", { name: "Usage guides" }).getByRole("link", { name: "Models and budgets", exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/models\.html$/);
+  await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Set budget limits", exact: true }).click();
+  await expect(page).toHaveURL(/#set-budget-limits$/);
+  await expect(page.getByRole("heading", { name: "Set budget limits", exact: true })).toBeInViewport();
 });

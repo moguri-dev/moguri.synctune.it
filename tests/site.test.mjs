@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import { test } from "node:test";
+import { guidePages } from "../scripts/docs.mjs";
 
-const root = new URL("../", import.meta.url);
+const sourceRoot = new URL("../", import.meta.url);
+const root = new URL("../dist/", import.meta.url);
 const origin = "https://moguri.synctune.it/";
-const pages = ["index.html", "docs/index.html", "404.html"];
+const pages = ["index.html", "docs/index.html", ...guidePages.map((page) => `docs/${page.slug}.html`), "404.html"];
 const read = (path) => readFile(new URL(path, root), "utf8");
 
 for (const page of pages) {
@@ -50,8 +52,8 @@ for (const page of pages) {
   });
 }
 
-test("the homepage and docs make development status explicit", async () => {
-  for (const page of ["index.html", "docs/index.html"]) {
+test("the homepage and all docs make development status explicit", async () => {
+  for (const page of pages.filter((page) => page !== "404.html")) {
     assert.match(await read(page), /[Ii]n development/);
   }
 });
@@ -84,23 +86,24 @@ test("the sitemap and custom domain use the canonical website", async () => {
   const sitemap = await read("sitemap.xml");
   assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/</loc>"));
   assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/docs/</loc>"));
-  for (const page of ["index.html", "docs/index.html"]) {
-    const canonical = page === "index.html" ? origin : `${origin}docs/`;
+  for (const page of pages.filter((page) => page !== "404.html")) {
+    const canonical = page === "index.html" ? origin : page === "docs/index.html" ? `${origin}docs/` : `${origin}${page}`;
     assert.ok((await read(page)).includes(`<link rel="canonical" href="${canonical}">`));
+    assert.ok(sitemap.includes(`<loc>${canonical}</loc>`));
   }
 });
 
 test("the build excludes source, maintenance docs, and dependencies", async () => {
-  const output = new URL("dist/", root);
+  const output = root;
   assert.deepEqual((await readdir(output)).sort(), [
     ".nojekyll", "404.html", "CNAME", "app.js", "assets", "docs",
     "index.html", "robots.txt", "sitemap.xml", "styles.css",
   ]);
-  assert.deepEqual(await readdir(new URL("docs/", output)), ["index.html"]);
-  for (const path of ["package.json", "README.md", "node_modules", ".git", "tests", "docs/development.md"]) {
+  assert.deepEqual((await readdir(new URL("docs/", output))).sort(), ["index.html", ...guidePages.map((page) => `${page.slug}.html`)].sort());
+  for (const path of ["package.json", "README.md", "node_modules", ".git", "tests", "docs/development.md", "docs/layout.html", "docs/usage", "scripts"]) {
     await assert.rejects(access(new URL(path, output)), { code: "ENOENT" });
   }
-  for (const path of [...pages, "styles.css", "app.js", "CNAME", "assets/mascot.svg"]) {
-    assert.deepEqual(await readFile(new URL(path, output)), await readFile(new URL(path, root)));
+  for (const path of ["index.html", "404.html", "styles.css", "app.js", "CNAME", "assets/mascot.svg"]) {
+    assert.deepEqual(await readFile(new URL(path, output)), await readFile(new URL(path, sourceRoot)));
   }
 });
