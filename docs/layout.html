@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{DESCRIPTION}}">
+  <meta name="theme-color" content="#F4EFE9">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{DESCRIPTION}}">
+  <meta property="og:url" content="{{CANONICAL}}">
+  <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
+  <meta property="og:image:alt" content="Moguri's mascot and wordmark: Power on your terms.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{CANONICAL}}">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="icon" sizes="any" href="../assets/favicon.ico">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preload" href="../assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="../styles.css">
+  <title>{{TITLE}}</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header shell">
+    <a class="brand" href="../" aria-label="Moguri home"><img class="brand-face" src="../assets/favicon.svg" width="36" height="36" alt=""><img class="brand-wordmark" src="../assets/wordmark.svg" width="128" height="40" alt="Moguri"></a>
+    <nav class="site-nav" aria-label="Primary"><a href="../#harness">How it works</a><a href="../#interfaces">Interfaces</a><a href="./" aria-current="page">Docs</a></nav>
+    <a class="header-github" href="https://github.com/moguri-dev">GitHub <span aria-hidden="true">&#8599;</span></a>
+  </header>
+  <main id="main" tabindex="-1" class="docs-layout shell">
+    <aside class="docs-nav">{{NAVIGATION}}</aside>
+    <article class="docs-article">
+      <span class="status"><span class="beacon" aria-hidden="true"></span>In development</span>
+      <h1>{{HEADING}}</h1>
+      <p class="docs-lead">{{DESCRIPTION}}</p>
+      <div class="docs-content">{{CONTENT}}</div>
+      <p class="docs-return"><a href="./">Back to the user guide</a></p>
+    </article>
+  </main>
+  <footer class="site-footer shell">
+    <div><a class="footer-brand" href="../"><img src="../assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>AI coding for desktop and terminal.</p></div>
+    <nav aria-label="Footer"><a href="./">User guide</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source</a><a href="https://github.com/synctune-io">A Synctune project <span aria-hidden="true">&#8599;</span></a></nav>
+  </footer>
+</body>
+</html>

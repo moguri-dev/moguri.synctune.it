@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Moguri is an AI coding workspace for desktop and terminal. Use GitHub Copilot or an OpenAI-compatible model server, with local or SSH execution.">
+  <meta name="theme-color" content="#F4EFE9">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Moguri | AI coding for desktop and terminal">
+  <meta property="og:description" content="Choose a GitHub Copilot model or connect your own model server. Desktop and terminal clients share session history and tool approvals.">
+  <meta property="og:url" content="https://moguri.synctune.it/">
+  <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Moguri's cream face, lavender wings, and red antenna beside the wordmark and Power on your terms.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://moguri.synctune.it/">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="icon" sizes="any" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+  <title>Moguri | AI coding for desktop and terminal</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header shell">
+    <a class="brand" href="./" aria-label="Moguri home">
+      <img class="brand-face" src="assets/favicon.svg" width="36" height="36" alt="">
+      <img class="brand-wordmark" src="assets/wordmark.svg" width="128" height="40" alt="Moguri">
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#harness">How it works</a>
+      <a href="#interfaces">Interfaces</a>
+      <a href="docs/">Docs</a>
+    </nav>
+    <a class="header-github" href="https://github.com/moguri-dev">GitHub <span aria-hidden="true">&#8599;</span></a>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="status"><span class="beacon" aria-hidden="true"></span>In development</span>
+        <h1 id="hero-title">AI coding <br><span>workspace</span></h1>
+        <p class="hero-lead">Moguri is a desktop app and terminal UI for AI coding. Use your GitHub Copilot account or connect an OpenAI-compatible model server. Both clients use the same session history and approvals.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#harness">How Moguri works <span aria-hidden="true">&darr;</span></a>
+          <a class="text-link" href="docs/">Read the docs <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <p class="hero-footnote">Local or SSH execution. Manual approvals by default.</p>
+      </div>
+
+      <figure class="control-board">
+        <div class="board-heading">
+          <span class="utility">Session controls</span>
+          <span class="board-indicator" aria-hidden="true"></span>
+        </div>
+        <div class="mascot-stage">
+          <span class="stage-label stage-label-left" aria-hidden="true">tools</span>
+          <img src="assets/mascot.svg" width="320" height="320" alt="Moguri's cream face, lavender bat wings, and red antenna pom-pom." fetchpriority="high">
+          <span class="stage-label stage-label-right" aria-hidden="true">context</span>
+        </div>
+        <dl class="board-controls">
+          <div><dt>Env</dt><dd>Local <span class="control-symbol" aria-hidden="true">&#8964;</span></dd></div>
+          <div><dt>Model</dt><dd>Not selected <span class="control-symbol" aria-hidden="true">+</span></dd></div>
+          <div><dt>Autonomy</dt><dd>Manual <span class="control-symbol" aria-hidden="true">&#8964;</span></dd></div>
+          <div><dt>Budget</dt><dd>Unlimited <span class="control-symbol" aria-hidden="true">&#8964;</span></dd></div>
+        </dl>
+        <figcaption>Illustrated session settings. Not a live session.</figcaption>
+      </figure>
+    </section>
+
+    <section class="harness-section shell section-space" id="harness" aria-labelledby="harness-title">
+      <div class="section-intro">
+        <p class="section-label">Session settings</p>
+        <h2 id="harness-title">Set up each session.</h2>
+        <p>Choose the model, execution environment, autonomy level, and budget separately. Desktop and terminal sessions use the same controls.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <span class="feature-category">Models</span>
+          <h3>Copilot or your own server</h3>
+          <p>Choose a model available through your GitHub Copilot account or connect an OpenAI-compatible server, including one you run locally.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-category">Execution</span>
+          <h3>Local or SSH execution</h3>
+          <p>Run work on your machine or on a pinned SSH host. Sandbox execution requires a separate setup review and a runtime that has passed containment checks.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-category">Permissions</span>
+          <h3>Tool approvals</h3>
+          <p>Manual mode leaves tool approvals to you. Higher autonomy doesn't override hard denials, read-only rules, or environment restrictions.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-category">Continuity</span>
+          <h3>Saved drafts and history</h3>
+          <p>Moguri saves drafts, queued prompts, and session history across restarts. You can inspect tool arguments, results, and reported usage.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="interfaces-section section-space" id="interfaces" aria-labelledby="interfaces-title">
+      <div class="shell" data-interface-tabs>
+        <div class="interface-heading">
+          <div>
+            <p class="section-label">Interfaces</p>
+            <h2 id="interfaces-title">Desktop, terminal,<br>and SDK.</h2>
+          </div>
+          <p>The desktop app and terminal clients use the same SDK. A local service stores session history and handles approvals.</p>
+        </div>
+        <div class="interface-tabs" data-tablist hidden aria-label="Moguri interfaces">
+          <button type="button" id="tab-desktop" aria-controls="panel-desktop">Desktop</button>
+          <button type="button" id="tab-terminal" aria-controls="panel-terminal">Terminal</button>
+          <button type="button" id="tab-sdk" aria-controls="panel-sdk">SDK</button>
+        </div>
+
+        <section class="interface-panel" id="panel-desktop">
+          <div class="interface-copy">
+            <span class="interface-kind">Desktop</span>
+            <h3>Projects in the desktop app</h3>
+            <p>Open conversations, files, and code changes in one app. Review plans and tool requests in the current session.</p>
+            <ul class="interface-points">
+              <li>Project sessions can use separate worktrees.</li>
+              <li>File and code-change views follow the selected session.</li>
+            </ul>
+            <a class="text-link" href="docs/getting-started.html#desktop-app">Desktop guide <span aria-hidden="true">&rarr;</span></a>
+            <a class="text-link" href="#screenshots">More desktop screenshots <span aria-hidden="true">&darr;</span></a>
+          </div>
+          <figure class="interface-preview native-preview">
+            <a class="screenshot-link" href="assets/screenshots/moguri-workspace-dark.png" aria-label="Open the dark-mode Moguri screenshot at full size">
+              <img src="assets/screenshots/moguri-workspace-dark-1440.png" srcset="assets/screenshots/moguri-workspace-dark-960.png 960w, assets/screenshots/moguri-workspace-dark-1440.png 1440w, assets/screenshots/moguri-workspace-dark.png 2880w" sizes="(min-width: 1280px) 650px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri desktop in dark mode, showing a synthetic demo conversation, project sessions, and model controls.">
+            </a>
+            <figcaption>Captured from Moguri 0.31 alpha. Real app UI with synthetic demo data. Select the image for full size.</figcaption>
+          </figure>
+        </section>
+
+        <section class="interface-panel" id="panel-terminal">
+          <div class="interface-copy">
+            <span class="interface-kind">CLI + OpenTUI</span>
+            <h3>Chats in the terminal</h3>
+            <p>The OpenTUI client streams replies and shows tool output. Choose Queue, Steer, or Interrupt when sending a prompt during ongoing work.</p>
+            <ul class="interface-points">
+              <li>Enter sends. Shift+Enter adds a newline.</li>
+              <li>Expand tool arguments and output when you need them.</li>
+            </ul>
+            <a class="text-link" href="docs/cli.html#terminal-interface">Terminal guide <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <figure class="interface-preview terminal-preview">
+            <div class="preview-title"><span class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Terminal / conversation illustration</span></div>
+            <div class="mock-terminal" aria-hidden="true">
+              <div class="terminal-brand">moguri <span>terminal client</span></div>
+              <p><span class="terminal-marker">&gt;</span> Read the setup instructions before editing files.</p>
+              <p class="terminal-reply">I'll read the project files first, then propose a change for you to review.</p>
+              <div class="terminal-divider"></div>
+              <p class="terminal-controls">Env: Local<br>Model: not selected<br>Autonomy: Manual</p>
+              <p class="terminal-input"><span class="terminal-marker">&gt;</span> Write a message <span class="terminal-cursor"></span></p>
+            </div>
+            <figcaption>Terminal illustration, not recorded output.</figcaption>
+          </figure>
+        </section>
+
+        <section class="interface-panel" id="panel-sdk">
+          <div class="interface-copy">
+            <span class="interface-kind">SDK</span>
+            <h3>Build a client with the SDK</h3>
+            <p>The SDK exposes session, model, permission, and tool APIs. Moguri's desktop and terminal clients use those APIs too.</p>
+            <p>It also includes a native MCP gateway.</p>
+            <a class="text-link" href="docs/sdk.html">SDK guide <span aria-hidden="true">&rarr;</span></a>
+          </div>
+          <figure class="interface-preview sdk-preview">
+            <div class="preview-title"><span class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>SDK / client architecture</span></div>
+            <div class="sdk-diagram">
+              <div class="sdk-clients"><span>Desktop</span><span>CLI / TUI</span><span>Your client</span></div>
+              <div class="sdk-connector" aria-hidden="true"></div>
+              <div class="sdk-core"><img src="assets/favicon.svg" width="32" height="32" alt=""><strong>Moguri SDK</strong><span>Sessions / Models / Permissions / Tools</span></div>
+              <div class="sdk-connector" aria-hidden="true"></div>
+              <div class="sdk-service">One local service</div>
+            </div>
+            <figcaption>Client architecture. The SDK isn't publicly distributed yet.</figcaption>
+          </figure>
+        </section>
+      </div>
+    </section>
+
+    <section class="screenshots-section shell section-space" id="screenshots" aria-labelledby="screenshots-title">
+      <div class="section-intro">
+        <p class="section-label">Desktop screenshots</p>
+        <h2 id="screenshots-title">Light mode and model controls</h2>
+        <p>Captured from the running Moguri 0.31 alpha app in an isolated demo. Project, conversation, and usage data are synthetic. Select an image to open the full-resolution PNG.</p>
+      </div>
+      <div class="screenshot-grid">
+        <figure>
+          <a class="screenshot-link" href="assets/screenshots/moguri-workspace-light.png" aria-label="Open the light-mode Moguri screenshot at full size">
+            <img src="assets/screenshots/moguri-workspace-light-1440.png" srcset="assets/screenshots/moguri-workspace-light-960.png 960w, assets/screenshots/moguri-workspace-light-1440.png 1440w, assets/screenshots/moguri-workspace-light.png 2880w" sizes="(min-width: 1280px) 580px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri desktop in light mode with the same synthetic demo project and conversation.">
+          </a>
+          <figcaption>Light-mode workspace</figcaption>
+        </figure>
+        <figure>
+          <a class="screenshot-link" href="assets/screenshots/moguri-model-controls.png" aria-label="Open the Moguri model-controls screenshot at full size">
+            <img src="assets/screenshots/moguri-model-controls-1440.png" srcset="assets/screenshots/moguri-model-controls-960.png 960w, assets/screenshots/moguri-model-controls-1440.png 1440w, assets/screenshots/moguri-model-controls.png 2880w" sizes="(min-width: 1280px) 580px, (min-width: 768px) 50vw, 100vw" width="2880" height="2000" loading="lazy" decoding="async" alt="Moguri's model menu showing the demo model, provider-controlled effort, context window, and model details.">
+          </a>
+          <figcaption>Model and context controls</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="development-section shell section-space" id="development" aria-labelledby="development-title">
+      <div class="section-intro">
+        <p class="section-label">Development</p>
+        <h2 id="development-title">Implemented and planned</h2>
+        <p>The desktop app, terminal clients, and SDK are implemented. Sandbox validation, advanced Kupo workflows, and public distribution are still in progress.</p>
+      </div>
+      <div class="development-grid">
+        <article class="development-card">
+          <span class="development-label">Current codebase</span>
+          <h3>Implemented</h3>
+          <ul><li>Desktop, CLI, and TUI</li><li>Shared SDK and MCP gateway</li><li>Model and permission controls</li><li>Local and pinned SSH execution</li></ul>
+        </article>
+        <article class="development-card">
+          <span class="development-label">Still in progress</span>
+          <h3>Remaining work</h3>
+          <ul><li>Validate the managed sandbox</li><li>Validate advanced Kupo workflows</li><li>Complete first-milestone checks</li><li>Prepare public installers and packages</li></ul>
+        </article>
+        <article class="development-card">
+          <span class="development-label">Planned components</span>
+          <h3>Mobile and IDE tools</h3>
+          <ul><li>Mobile clients</li><li>IDE tools and extensions</li><li>Dedicated component repositories</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="follow-section" aria-labelledby="follow-title">
+      <div class="shell follow-layout">
+        <div><p class="section-label">GitHub</p><h2 id="follow-title">Follow development</h2><p>See the project directory and follow updates in the Moguri GitHub organization.</p></div>
+        <a class="button button-primary" href="https://github.com/moguri-dev">Open Moguri on GitHub <span aria-hidden="true">&#8599;</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div><a class="footer-brand" href="./"><img src="assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>AI coding for desktop and terminal.</p></div>
+    <nav aria-label="Footer"><a href="docs/">Docs</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source</a><a href="https://github.com/synctune-io">A Synctune project <span aria-hidden="true">&#8599;</span></a></nav>
+  </footer>
+</body>
+</html>
