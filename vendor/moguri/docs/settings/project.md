@@ -9,12 +9,11 @@ this page keeps the full detail.
 - Saving one field preserves other pending (unsaved) text in the panel.
 - Guidance overrides grant no tools or permissions.
 
-## Repository (upstream, main branch, branch pattern)
+## Repository (Git remote, main branch, branch pattern)
 
-- Before the Upstream control appears, Moguri runs a bounded Local inspection of the repository layout. Directory links are not followed. The panel shows the single repository found, or why Upstream is unavailable (none found, more than one, denied folders, or the inspection limit was reached).
-- The Upstream control requires exactly one verified repository under the project folder, including nested repository roots. With zero or several roots the control stays hidden.
-- If the layout cannot be verified, no Upstream control is enabled (error fallback text).
-- The Upstream preference never rebinds an existing session's root.
+- Moguri does not store a Git upstream. Every Git and GitHub read uses the remote this folder's own Git configuration designates: the `gh repo set-default` choice, then `origin`, then the only remote. The checked-out branch does not change it. If several remotes exist without a default or `origin`, none is guessed. Changing the folder's remotes or `gh repo set-default` takes effect on the next read.
+- The panel runs a bounded Local inspection of the repository layout. Directory links are not followed. It shows the single repository found and its current Git remote, or why none applies (none found, more than one, denied folders, or the inspection limit was reached).
+- Older saved settings may still contain an `upstream` value. It is ignored and dropped on the next save.
 - Branch name pattern placeholders are `{slug}` and `{id}`. Binding a PR or creating a session never silently changes this folder's checkout.
 - Contract: `docs/architecture/repository-management.md`, `docs/architecture/chat-repository-binding.md`.
 

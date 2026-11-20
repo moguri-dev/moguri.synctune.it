@@ -335,6 +335,37 @@ and inspect its original receipt rather than sending a replacement.
 | `routing.profileDraft(input)` | Prepare an unpersisted source-review assertion; explicitly save its exact profile in the full Kupo policy after reviewing it. |
 | `tools.history(sessionId, input?)` | Page retained original public prompt/model/tool/answer sources, including after compaction; no private roles, console data, hidden thinking, drafts or queued input. |
 
+### Interrupted chats (protocol 115)
+
+| Surface | Contract |
+|---|---|
+| `sessions.interrupted()` | Chats with a recorded `Session.interruption` (`cause`, `turnId`, `queuedItemIds`, `at`) that are not archived. |
+| `sessions.continueInterrupted(sessionId)` | Release the recorded waiting prompts and, when a turn was running, queue the continue workflow ahead of them. Rechecks policy, Env and model. |
+| `sessions.continueAllInterrupted()` | Continue each interrupted chat; returns `{ sessionId, error }` per chat so one failure doesn't stop the rest. |
+| `sessions.dismissInterruption(sessionId)` | Forget the record without continuing; held prompts stay held. |
+
+`settings.interactions.continueInterrupted` (`ask` or `always`) controls
+whether the service continues interrupted chats automatically after a restart.
+`executeInterruptedCommand` is the shared `/interrupted` helper. See the
+[contract](architecture/interrupted-sessions.md).
+
+### Automations (protocol 115)
+
+| Surface | Contract |
+|---|---|
+| `automations.list(projectId?)` / `runs(automationId?)` | Read `Snapshot.automations` (deleted ones omitted) and recent `automationRuns` (latest 50 per automation plus every active run). |
+| `automations.create(projectId, definition, { enabled, controls? })` | Capture full controls from the project defaults plus explicit overrides. `enabled` is the explicit activation; nothing runs while paused. |
+| `automations.update(id, definition, controls?, revision?)` | Replace name, schedule and steps; overrides apply on top of the captured controls. Active automations re-anchor at the edit. |
+| `automations.enable(id)` / `pause(id)` | Turn scheduling on from now, or stop future occurrences (an active run continues). |
+| `automations.runNow(id)` | Start one run now in a new chat; refused while a run is active. |
+| `automations.stopRun(runId)` / `delete(id, { stopRunning? })` | Stop a run's chat so later steps never run; delete refuses an active run unless `stopRunning`. |
+
+`AutomationDefinition` is `{ name, schedule, steps }`; `parseAutomationWorkflow`
+reads the readable YAML/JSON workflow syntax after parsing, and
+`executeAutomationsCommand` is the shared `/automations` helper. Semantics for
+DST, missed and overlapping occurrences, script steps and restart are in the
+[automations contract](architecture/automations.md).
+
 `ScheduledTiming` is `{kind:"delay",minutes,timeZone}` or
 `{kind:"at",at,timeZone,localTime,offsetMinutes}`. Use
 `scheduleLocalChoices("2030-10-27T02:30","Europe/Rome")` to review both DST
@@ -738,6 +769,16 @@ bytes. Partial/cancelled/lost work is not replayed or called successful.
 `github.browse` resources `files` and `jobs` bind exact PR/run IDs and head SHA;
 the PR pane's Files/Actions/Reviews and reviewed watch use the same account/root
 and expose stale/unavailable data without acquiring GitHub write authority.
+Protocol 116 adds bounded resources `tags`, `release-latest`, `release-tag {tag}`,
+`annotations {checkRunId, headSha}`, `contents {path, ref?}`, `settings`,
+`rulesets` and `branch-rules {branch}`, and the reviewed
+`github.repo.settings` action. `GithubModelActionSchema`/`isGithubModelAction`
+name the subset the `github_write` agent tool may preview and execute.
+
+`capabilities.propose(projectId | null, kind, name, content)` accepts `null`
+(protocol 116) for skills and scripts that apply to every chat;
+`scriptEntries(registry, projectId)` returns the scripts a chat in that scope
+sees, with project scripts shadowing every-chat scripts of the same name.
 
 ### Retained PR CI lifecycle
 
@@ -865,7 +906,7 @@ const created = await sdk.github.startSession(scope, source, reviewed.digest);
 repositories. Public visibility is not an open-source license claim.
 Discovery uses only the current controller GitHub CLI account. No Copilot login,
 secret-backend updater token, rootless filesystem access or SSH fallback is
-introduced. `github.project` derives the exact configured upstream, actual
+introduced. `github.project` derives the remote the folder's Git configuration selects, actual
 default branch, local branch and account; clients do not guess `main` or an
 account name.
 
@@ -1458,9 +1499,13 @@ Global/project guidance is recorded in actual future prompt snapshots.
 state; `runtime.retryPower()` retries only that original helper, never a model.
 
 `projects.repositories(id)` is a bounded, explicitly Local, non-link-following
-inspection. Upstream configuration requires one completely verified repository,
-including a nested root. Incomplete/denied/multi-repository layouts do not
-guess or rebind the session's workspace.
+inspection. With one completely verified repository, including a nested root,
+its `upstream` is the remote that repository's live Git configuration selects
+(`gh repo set-default` choice, then `origin`, then the only remote; never the
+checked-out branch's tracking remote), or `null`. Project
+settings never store an upstream; a legacy `repo.upstream` is ignored and
+dropped. Incomplete/denied/multi-repository layouts do not guess or rebind the
+session's workspace.
 
 `integrations.githubConnection()` explicitly verifies the controller GitHub CLI
 account without Copilot/update credentials. `linear.connection(false)` reads only

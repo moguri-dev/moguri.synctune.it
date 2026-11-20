@@ -48,13 +48,12 @@ test("references to private repositories and unpublished files become marked pla
   const { content, privateLinks } = upstream([
     "# General",
     "[setup guide](../setup.md#claude-agent) [issue](https://github.com/mbianchidev/moguri/issues/39)",
-    "[clone](https://github.com/mbianchidev/moguri.git) [agents](../../AGENTS.md) [squad](https://bradygaster.github.io/squad)",
+    "[clone](https://github.com/mbianchidev/moguri.git) [agents](../../AGENTS.md)",
     "[SendBox](https://github.com/mbianchidev/sendbox)",
   ].join("\n\n"));
   assert.equal(privateLinks, 4);
-  assert.doesNotMatch(content, /href="[^"]*(?:setup\.md|mbianchidev\/moguri|AGENTS|squad)/);
+  assert.doesNotMatch(content, /href="[^"]*(?:setup\.md|mbianchidev\/moguri|AGENTS)/);
   assert.equal([...content.matchAll(/\(not public yet\)/g)].length, 4);
-  assert.ok(content.includes("(link unavailable)"));
   assert.ok(content.includes('href="https://github.com/mbianchidev/sendbox"'));
 });
 

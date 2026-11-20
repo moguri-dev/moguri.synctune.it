@@ -10,8 +10,6 @@ export const moguri = {
   repository: "mbianchidev/moguri",
   // Repositories that return 404 to the public. Links into them render as plain text.
   privateRepositories: ["mbianchidev/moguri", "mbianchidev/sql", "mbianchidev/flAI-on-the-wall", "mbianchidev/vslocal"],
-  // Dead external links in synced documents, found by `npm run check:links`. Fix them upstream, then remove them here.
-  unavailableLinks: ["https://bradygaster.github.io/squad"],
 };
 
 // GitHub owner and repository names are case-insensitive.
@@ -116,6 +114,12 @@ export const screenshots = [
     capture: "after-analytics-1280.png",
     title: "Dashboard analytics",
     alt: "The Moguri Dashboard's Analytics tab with live counters, a generated session and a zoomable timeline of prompts and answers, kept in memory for one hour.",
+  },
+  {
+    name: "automations",
+    capture: "after-automations-1280.png",
+    title: "Automations",
+    alt: "Moguri's Automations page with a New automation button and recurring automations, the optional repeated-task tool check with its schedule, and one-time scheduled prompts. Each run starts a new chat with the captured model, Env, autonomy and budget.",
   },
   {
     name: "palette",

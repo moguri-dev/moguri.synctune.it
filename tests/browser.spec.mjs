@@ -279,7 +279,7 @@ test("real app screenshots load responsively and open at full size", async ({ pa
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto("/");
   const links = page.locator(".screenshot-link");
-  await expect(links).toHaveCount(8);
+  await expect(links).toHaveCount(9);
   const hero = page.locator(".hero-shot img");
   await expect.poll(() => hero.evaluate((image) => image.currentSrc)).toContain("moguri-conversation-narrow.png");
   for (const link of await links.all()) {

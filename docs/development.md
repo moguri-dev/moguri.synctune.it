@@ -98,8 +98,8 @@ Links in synced documents are rewritten to their published pages. A link to a
 file that isn't published, or to a repository listed in `privateRepositories`,
 renders as plain text with a dotted underline and a screen-reader note, because
 those URLs return 404 to visitors. Remove a repository from that list when it
-becomes public. `unavailableLinks` does the same for dead external links found
-by `npm run check:links`; fix those upstream, then remove them.
+becomes public. Fix dead external links that `npm run check:links` finds in a
+synced document upstream, then sync again.
 
 ## Releases and download links
 

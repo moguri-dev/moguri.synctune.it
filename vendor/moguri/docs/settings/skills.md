@@ -27,7 +27,7 @@ into one project or every project, and the agent's toolsets. Contract:
 
 ## Install from a source (protocol 114)
 
-- **Install** in Skills / Marketplace re-reads the source and installs those exact bytes as a disabled skill in the chosen
+- **Install** in Customize / Marketplace re-reads the source and installs those exact bytes as a disabled skill in the chosen
   project or, with **All projects**, for every project. A changed source needs a fresh search.
 - Installing grants no tools. Reinstalling changed bytes under the same name updates that skill to a new disabled
   revision; identical bytes and plugin-owned names are refused.

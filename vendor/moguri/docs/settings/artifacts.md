@@ -8,7 +8,12 @@ this page keeps the full detail.
 The **Artifacts** tab next to Automations browses one project (or the chats without a project) at a time: build outputs
 from dist/out/build/release-style folders in the checkout and session worktrees, files agents wrote, chat images, links
 and these saved documents. Each item links to its chat when known. **Show in Finder** only reveals a file the service
-currently lists; nothing is opened or run. Saved documents are still edited here. Contract:
+currently lists; nothing is opened or run. Saved documents are still edited here.
+
+Select saved notes and files with their checkboxes (or use an item's **Delete** / **Move to Trash**), then confirm.
+Files go to the system Trash and can be restored from there; saved notes and their revisions can't. Chat images and
+links are part of the conversation and aren't deletable. Files in a workspace folder project's own checkout are
+read-only and never moved. Contract:
 `docs/architecture/skills-tools-artifacts.md`.
 
 ## Documents

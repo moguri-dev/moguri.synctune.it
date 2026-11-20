@@ -1,17 +1,17 @@
 {
   "repository": "mbianchidev/moguri",
   "ref": "cp-desktop-build-latest-dmg",
-  "commit": "24630c284ab41961738f9991914292cb1c894eff",
+  "commit": "b686ddc0f4e111b72a3324d511c8374800a76909",
   "version": "0.32.0-alpha.1",
   "documents": {
     "docs/installation.md": "867d15bf60f9c6dd8ccb1ba2196ba654e8310f54844d9b9bed6d1d0a84435f42",
     "docs/settings/README.md": "2f00b39b41060d187e2c776bb4478baa89ff5ff52e2a7de972e2e18085efaff0",
-    "docs/features.md": "09263a828f54b9ee43b732515576e2ee1242212cd024672f9d2e4a94f7deb5f0",
-    "docs/remaining-milestone-gaps.md": "1a32222d8d4a8ffb3ba59dd95c3083df4ac7f61ec40a9825317d5beb84ae6060",
-    "docs/vision.md": "93830a45ae5e36a7c463eba38344c8169b5e689c4ef7a8e08e7914266585395d",
+    "docs/features.md": "18d6875c41e8acf710984b49cde3d6906f8ce1063ca32e8f9256ac9c1a4cbb54",
+    "docs/remaining-milestone-gaps.md": "b8fdedf1e4f04e77a2e058af950b68e9b4c90118e4d1b4cc11cc5c2b0286d32d",
+    "docs/vision.md": "c028205b191d716129b0fff2dcb6ece80a3a567464650afcedb18626887d92a1",
     "docs/settings/general.md": "9715ddbf0c7cc3df511dcb1863f461643a6ff3c5279c150e91eb7e273e632224",
     "docs/settings/repositories.md": "24d003b6dbe27eb8a0588ed58d1eb171d9e9af3e95930ec32b076db051f12d17",
-    "docs/settings/project.md": "2305b8ddb4393e64ef6ecb854829c9fc04748c2016c1c25f2cd8975ca8414561",
+    "docs/settings/project.md": "fc3b97bae1bf023aaad205875371e265ae6d1a1b057fe7eddeb740fe410e7569",
     "docs/settings/providers.md": "eb5852b528ea82b904d6e0239a624e52376fc985db454a11ee88dd2c79ddab90",
     "docs/settings/local-models.md": "15338f7706de50ec128f596ba3259032056409267a0ed70be970c20a92683250",
     "docs/settings/kupo-routing.md": "7eeadb204bea2709626560efe3dc4ec978c753152edc768939827664f00c149e",
@@ -26,7 +26,7 @@
     "docs/settings/sandbox.md": "8e9a82b593598965464a19fa17b7adf87761feb45077ab98f027a88df770b042",
     "docs/settings/remote-ssh.md": "057ed9151d8c1968fcd38d46e3e11464c2ab9b6072b22def63945dbb8e7eae94",
     "docs/settings/subagents.md": "0214da8d198fb017b39d6a7923b9e0018c8545dc420e869dd7b26b94bfe0cd56",
-    "docs/settings/scripts.md": "4a21fc409c9c0fc4a88b54a189172567c8f3bc4c4a666e3d419e1f82d4ddbeda",
+    "docs/settings/scripts.md": "88cca46392aaab050fc9ea471f1a808578bd08a0ec8d39955d7f0f246fee34ae",
     "docs/settings/lifecycle-hooks.md": "3fb151f3eccc163f38827c5766025894316281fe35021e68df73b930d06962d8",
     "docs/settings/dependency-cache.md": "a41a5e7e6f66eca0bc40cfbf18765a3a362386b8f791064beac3af74a28f867a",
     "docs/settings/startup-defaults.md": "34b43df14d4a430b35a9b675c9010581bd308054c611714059a4221e5a553b94",
@@ -34,11 +34,11 @@
     "docs/settings/retention.md": "d42a70b766cf6ddf8fbf4b498345cf70bc3fc96b221f8d67f8bc0671ca8d0b34",
     "docs/settings/context-compaction.md": "2508de041d3ad886e475a906a737728351ee79e4cb62e604a7de976dfb730460",
     "docs/settings/budgets.md": "133aeddbec8409f49188c2ac9e2a5cc86278b8aa5c5a56667650f8366aca0247",
-    "docs/settings/artifacts.md": "68279bbb67660dca21ac1360b5ac9afc8888783eb4f93b250fa81dff5d8b8423",
+    "docs/settings/artifacts.md": "145db608a88851bf61b5f31492d94c8f3305885f5fc470ce1e616e9a78f0ec5d",
     "docs/settings/candidates.md": "94b2e1d6d8f8ac227a870fd6bc94aa189aefb9dc26907e0d5d39cf686906867e",
     "docs/settings/user-guidance.md": "56c561496564d6280cf97509b1cb62885f6c076706afe8b388fec2ad31c8bf00",
     "docs/settings/system-prompt.md": "588c9bfb61ffb12b1b1e9afcbe2906f3ed7c0b17958c46e7589cb082bbdc541d",
-    "docs/settings/skills.md": "51fb94c49742656d982d2365fe8ea5bda532464cac7e649dcb13ddd06138abba",
+    "docs/settings/skills.md": "bb244b37b4a260f3fdbd96b7a9717a34ff352eaabe6838814572d15e39b6040e",
     "docs/settings/knowledge-tiers.md": "4e3d25e27e9feb514de3831b95b359e3c98ce1ee03118d54d55ad5631fba1730",
     "docs/settings/repository-memory.md": "91c6868e5559b3c2bf8494a2cac55148006e78e57ac7bd45fabfb63ea2c6a796",
     "docs/settings/appearance.md": "3b7b666abfe454a7cb31b329233d212c9f2a7ac9acacc756836f9122ba1bd4e9",
@@ -48,8 +48,8 @@
     "docs/development.md": "c3245ac0b0c9929819b7c55facb634326c42b03763e73822a4b1973c87b11814",
     "CONTRIBUTING.md": "4f9fce704a4393366b7ab34e1f846ebac4078e6b7bd9550b55ea332469c03f7c",
     "docs/architecture/overview.md": "f0c45f18e2cb3fbf4e2b4426b8b3d493cf7ec3c04d18617cf65c7a7a01ce65c2",
-    "docs/sdk.md": "607d781f0f431546a267664013caf2f89bddb954536f54cf5aa4c9f462140f85",
-    "docs/implementation.md": "b8721ef9fc8ed514dbee156a94de211a48b8458de21f0bec9543c22f3bdb5533",
+    "docs/sdk.md": "e3baec0a94f6cbb551f0bea7d32282e3aead269cabd7bb984d697b34a08ddb0a",
+    "docs/implementation.md": "042b18e729745a0753783b45895255ea0126fb1c10548e501eb33c0f4dcf378e",
     "docs/design.md": "a40db5fcea646ea3333b60ff7ab8b13886c8d328e9a3e3aca849e0879f8bb211",
     "docs/releasing.md": "78e18d2675c92949d23e66445c6bf0839c445a8dde695c532ba333f1e6bf1f7e",
     "docs/third-party.md": "d7d94f5c7b10cfe5736cd00bd7161df25e69a5278e443b2004cd319ab2c822d0",
@@ -66,67 +66,73 @@
         "capture": "after-conversation-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "aec9e8e4973bcaf4ba005f4820488c96ffa7b5d18c941bdc04caa6ad62ca9986"
+        "sha256": "2e652c9f6d163077ba8d52a344f88ada716b3357180f5b6d8d15f4c153e5fd6f"
       },
       "assets/screenshots/moguri-conversation-narrow.png": {
         "capture": "after-conversation-760.png",
         "width": 760,
         "height": 800,
-        "sha256": "6df37277430749ef0540930b1172bd5e4158990a5a484f50369abd681c49e314"
+        "sha256": "7ba20a53c6f063b97c6e4ecb630f40baeeadfb61cd58ffaba6647f006fbc66c2"
       },
       "assets/screenshots/moguri-approval.png": {
         "capture": "after-approval-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "2dd5fd46737d0c0d84c9e7f8d1e30b9c5f83d6e3e0e12ea4b792aa549e290f23"
+        "sha256": "55ea4426ad2ffe41162368746b8f0210aea311f90dbbc71708f22d2b42404fe5"
       },
       "assets/screenshots/moguri-approval-narrow.png": {
         "capture": "after-approval-760.png",
         "width": 760,
         "height": 800,
-        "sha256": "615c96de9cbe5449414a5360c28144c9d8539fd2f3fd02425f214598184d6f44"
+        "sha256": "1c515b99a2741e24490a276a72c0a33780a60b8b00cfa1fcb4f358fef0c47ff4"
       },
       "assets/screenshots/moguri-autonomy.png": {
         "capture": "after-composer-popover-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "a613c98f8f0f1cc6117b6325026fcf61ccbcdb9664b6120972edc822e2cd5fa1"
+        "sha256": "b83687ae8ad6b8519a78268bf4ede3ea6fb84d41b2dc4d790d273cda858a504c"
       },
       "assets/screenshots/moguri-code-change.png": {
         "capture": "after-code-change-diff-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "3fb88209e75080c1812a6465b7b55a944ff1782c2725bb5ba5f2e3d9db12f55c"
+        "sha256": "a9fb41633b7ac8a4b25f7da690b407504eefcbbbf1301fcee592f0cd38345933"
       },
       "assets/screenshots/moguri-settings.png": {
         "capture": "after-settings-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "b2a269a7d7f2cff3565bab14f0dd4f13fef043328ca7036af01514d112f5eecb"
+        "sha256": "9c7bb795ffa6ebbedd234feefefee517d6ac3088434b982f4968cfeaf450466d"
       },
       "assets/screenshots/moguri-analytics.png": {
         "capture": "after-analytics-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "50c2c0f6d4856645d18e4b834796db936499829ebdeab37dd89839d3bad898a9"
+        "sha256": "4c6fe80bbb1fe79793209bc829774dfeb2513eada441271ddcc6f73eab9ef95f"
+      },
+      "assets/screenshots/moguri-automations.png": {
+        "capture": "after-automations-1280.png",
+        "width": 1280,
+        "height": 800,
+        "sha256": "f7b9d6c73ab8567af53bab6cd5376ce75acb7c759e5eec690e648ec5bdb12fac"
       },
       "assets/screenshots/moguri-palette.png": {
         "capture": "after-palette-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "7723ac5ef0e972f329bbf499ee1d7e9237930a6c7ad0fa05db280a30b25b2a2f"
+        "sha256": "ec2d42569ce250ef0ca928bbc28fd9e6bc521352b9d8456d65e61011b1d2abd1"
       },
       "assets/screenshots/moguri-start.png": {
         "capture": "after-start-1280.png",
         "width": 1280,
         "height": 800,
-        "sha256": "f4faef962fbb7cc38872e92765cfe39bb176de284fc0f806a4bdf5e9a2491dd3"
+        "sha256": "ad7ce73e7752518775cc97e7df55da51bc9e5bb3b6d346e3238357d4453d5fda"
       },
       "assets/screenshots/moguri-start-narrow.png": {
         "capture": "after-start-760.png",
         "width": 760,
         "height": 800,
-        "sha256": "d9e8ff3f37bbb85bb951b90a151e2396dba5e085163d96f8957b4ae6d2b4e22b"
+        "sha256": "864986afba08195aaa3c31be3183b7b811922f4c3e27f838091dbaa350c077b4"
       }
     }
   }

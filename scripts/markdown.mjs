@@ -1,6 +1,6 @@
 import { posix } from "node:path";
 import { Marked, Renderer } from "marked";
-import { isPrivateRepository, moguri } from "./catalogue.mjs";
+import { isPrivateRepository } from "./catalogue.mjs";
 
 export const escapeHtml = (text) => text.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -44,7 +44,6 @@ function isPrivateGitHub(url) {
 }
 
 const privateText = (text) => `<span class="doc-private" title="In Moguri's source repository, which isn't public yet">${text}<span class="visually-hidden"> (not public yet)</span></span>`;
-const unavailableText = (text) => `<span class="doc-private" title="This link no longer works">${text}<span class="visually-hidden"> (link unavailable)</span></span>`;
 const anchorHtml = /^(?:\s*<a id="[\w-]+"><\/a>\s*)+$/;
 
 // Resolves a Markdown link from a repository file. Returns an href, or null for private sources.
@@ -87,7 +86,6 @@ export function renderMarkdown(source, { path, route, routes, upstreamRoot = nul
         return `<h${token.depth} id="${id}">${html}</h${token.depth}>\n`;
       },
       link(token) {
-        if (moguri.unavailableLinks.includes(token.href)) return unavailableText(this.parser.parseInline(token.tokens));
         const href = resolveLink(token.href, { path, route, routes, upstreamRoot });
         const text = this.parser.parseInline(token.tokens);
         if (href === null) {

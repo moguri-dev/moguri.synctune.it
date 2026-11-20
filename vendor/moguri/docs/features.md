@@ -101,13 +101,29 @@ share the same service and SDK. Transient model failures use current-profile
 The primary button retries the original eligible failure without sending a new
 draft. Idle scheduling offers local-time controls, unsent ghost prompts and an
 Automations / Scheduled prompts group, with one-at-most queue admission.
-[Skills and Artifacts tabs](architecture/skills-tools-artifacts.md) sit next
+[Customize and Artifacts tabs](architecture/skills-tools-artifacts.md) sit next
 to Automations: toggle installed skills, install skills from configured
 repositories, browse the agent's toolsets, write or ask the agent for script
-tools, and find each project's builds, files, images and links with their chat.
+tools for every chat, and find each project's builds, files, images and links
+with their chat. Agents get typed GitHub reads (tags, releases, annotations,
+contents, settings, rules) and reviewed `github_write` (comments, threads,
+releases, settings; draft PRs only).
 An optional recurring check suggests script tools for requests you repeat.
 Local and SSH continuation are qualified. A rolled-back native workspace keeps
 its explicit inspection/preparation gate instead of automatic root substitution.
+
+Closing or quitting the desktop app saves unsent drafts and open queued-prompt
+edits first. Chats a quit, restart or crash interrupted can be
+[continued](architecture/interrupted-sessions.md) one by one, all at once,
+or automatically after every restart.
+
+[Automations](architecture/automations.md) run a prompt or a declarative
+workflow of prompts and repository-trusted scripts once, every N minutes, daily
+or on chosen weekdays. Each run starts a new chat in its project with captured
+controls; script steps run without a model call under normal approval. Missed
+times run once, overlapping times are skipped, and restarts never replay a step.
+Desktop, TUI (`/automations`, F9) and CLI (`moguri automations`, YAML/JSON
+workflow files) share the same state.
 
 The owner-requested [protocol-41 platform extension](architecture/platform-workflows.md)
 adds **Sky/Terra/Glacier knowledge**, reviewed lifecycle hooks and immutable
@@ -315,7 +331,7 @@ Model generation still requires exact source review.
 Alerts have a dismissible X without clearing the underlying work or draft.
 Read-only Kanban sync retains its exact source across presentation updates;
 see the [alert and observation contract](architecture/alerts-kanban-sync.md).
-Automations remain unimplemented. Work item links the project's Kanban cards or
+Automations holds recurring automations and one-time scheduled prompts. Work item links the project's Kanban cards or
 GitHub issues; session PRs open in Code change. Copilot connection status stays in Settings,
 not the left sidebar.
 

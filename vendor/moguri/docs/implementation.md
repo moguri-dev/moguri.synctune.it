@@ -995,8 +995,8 @@ These ideas remain part of the long-term vision but are not first-milestone requ
 - scheduled CI watching;
 - dependency roundups covering Dependabot, Renovate, and other update bots;
 - a **My work** workflow for open pull requests, pending reviews, broken CI, and unresolved comments;
-- scheduled prompts;
-- agentic workflows combining prompts and explicit scripts through a readable workflow syntax;
+- scheduled prompts (one-time prompts, and recurring [automations](architecture/automations.md) since protocol 115);
+- agentic workflows combining prompts and explicit scripts through a readable workflow syntax (delivered as [automations](architecture/automations.md));
 - optional delegation of scheduled workflows to a server while retaining the same policy, budget, event, and artifact model.
 
 ### Continuous modes and taggable agent personas
@@ -1018,7 +1018,7 @@ The first-release autonomy levels apply independently to these later specialized
 - **Long-running Autopilot** — supports giant greenfield systems such as a browser and major rewrites such as C-to-Rust migrations, using durable plans, checkpoints, recovery, and budgets;
 - **Stabilize** — evaluates repository health, attempts policy-gated integration of pending pull requests, remediates security issues, installs or repairs Dependabot, enhances and hardens Actions, and installs agentic issue-triage workflows;
 - **Swarm** — analyzes all open issues, proposes a coherent roadmap and rationalized target state, reports for approval, then coordinates implementation toward resolving the complete approved issue set;
-- **Team** — supports persona-based agents, councils, and patterns inspired by [Squad](https://bradygaster.github.io/squad) and [Paperclip](https://github.com/paperclipai/paperclip).
+- **Team** — supports persona-based agents, councils, and patterns inspired by [Squad](https://github.com/bradygaster/squad) and [Paperclip](https://github.com/paperclipai/paperclip).
 
 ### Research tracks
 

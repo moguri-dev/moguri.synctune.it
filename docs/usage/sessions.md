@@ -140,7 +140,49 @@ moguri scheduled cancel SCHEDULE_ID
 
 Creation consumes the existing saved draft, not prompt text from the timing file. A delayed prompt can still be blocked by changed controls, unavailable models, or current policy.
 
-General-purpose recurring Automations are not implemented. Scheduled prompts are a separate available feature.
+## Run recurring automations
+
+An automation runs a prompt, or a workflow of up to 10 prompt and script steps, once, every N minutes, daily, or on chosen weekdays in a timezone. Each run starts a new chat in the automation's project with the model, Env, autonomy, and budget captured when you saved it. One-time scheduled prompts are a separate, lighter feature.
+
+- **Desktop:** **Automations / New automation** opens the editor. The **On schedule** switch turns an automation on or pauses it. Each automation shows its next run, captured controls, steps, and recent runs with **Open chat** and **Stop**. **Run now** starts one run; **Delete** keeps the run chats.
+- **TUI:** **F9 / Automations** lists automations with **Run now** and **Pause** or **Turn on**. `/automations` lists them and their runs.
+- **CLI:** `moguri automations create` reads a YAML or JSON workflow file.
+
+A workflow file for a weekday report:
+
+```yaml
+name: Morning dependency check
+schedule:
+  kind: weekly
+  days: [1, 2, 3, 4, 5]
+  time: "09:00"
+  timeZone: Europe/Rome
+steps:
+  - prompt: Summarize open dependency pull requests and failing checks.
+  - script: scripts/check-deps.sh
+    interpreter: sh
+  - prompt: Write a short report of what the script found.
+```
+
+```sh
+moguri automations create workflow.yaml --project PROJECT_ID --paused
+moguri automations enable AUTOMATION_ID
+moguri automations runs AUTOMATION_ID
+```
+
+Nothing runs until you turn an automation on, and Moguri must be running. A missed time runs once when Moguri is back and records how many were missed. A time is skipped, and recorded, while the previous run is still active. A failed, stopped, or partial step ends the run.
+
+Script steps run the exact scripts in the project's repository trust on this Mac, without a model call, and ask for approval unless the captured autonomy approves automatically. They need Local, never fall back to another Env, and get no extra permissions. After a restart, nothing is replayed. [Implemented capabilities](../../vendor/moguri/docs/features.md) lists exactly what this release covers.
+
+## Continue interrupted chats
+
+Closing or quitting the desktop app saves unsent drafts and open queued-prompt edits first. When Moguri quits, restarts, or crashes while a chat is working, it records the running turn and the prompts that were waiting. Prompts you held stay held.
+
+- **Desktop:** after reconnecting, **Continue interrupted work?** lists each chat with **Open**, **Dismiss**, and **Continue**, plus **Continue all**. The chat itself shows **Interrupted when Moguri stopped**.
+- **TUI:** `/interrupted` lists them and takes `continue ID`, `continue all`, `dismiss ID`, `always`, or `ask`.
+- **CLI:** `moguri interrupted` takes the same actions.
+
+Continue asks the agent to check where it left off first, then runs the waiting prompts. Nothing the agent already did is repeated, and approvals, budgets, and autonomy are unchanged. Choose whether to ask or continue automatically under **Settings / Sessions / Confirmations / Interrupted chats after a restart**.
 
 ## Answer questions
 

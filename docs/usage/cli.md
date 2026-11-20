@@ -80,9 +80,16 @@ moguri scheduled list
 moguri scheduled create timing.json --session SESSION_ID
 moguri scheduled send-now SCHEDULE_ID
 moguri scheduled cancel SCHEDULE_ID
+moguri automations list
+moguri automations create workflow.yaml --project PROJECT_ID --paused
+moguri automations runs AUTOMATION_ID
+moguri automations run AUTOMATION_ID
+moguri automations stop RUN_ID
+moguri interrupted list
+moguri interrupted continue SESSION_ID
 ```
 
-Hold does not run the prompt. Scheduled creation consumes an existing saved draft. See [drafts and prompt delivery](sessions.md#drafts-and-prompt-delivery) and [scheduling](sessions.md#schedule-a-prompt).
+Hold does not run the prompt. Scheduled creation consumes an existing saved draft. Automations also take `update ID FILE`, `enable`, `pause` and `delete ID [--stop-running]`. See [drafts and prompt delivery](sessions.md#drafts-and-prompt-delivery), [scheduling](sessions.md#schedule-a-prompt), [automations](sessions.md#run-recurring-automations) and [interrupted chats](sessions.md#continue-interrupted-chats).
 
 ## Model and budget commands
 
@@ -208,7 +215,7 @@ In a composer, type `/` to view built-ins and enabled skills. Selection fills or
 | --- | --- |
 | Navigation | `/session`, `/sessions`, `/work-items`, `/code-requests`, `/sidebar`, `/settings`, `/profiles` |
 | Chats | `/new`, `/open`, `/rename`, `/read-only`, `/agent`, `/side`, `/subsession` |
-| Prompts | `/queue`, `/run`, `/steer`, `/interrupt`, `/resume`, `/stop`, `/copy`, `/question` |
+| Prompts | `/queue`, `/run`, `/steer`, `/interrupt`, `/resume`, `/stop`, `/copy`, `/question`, `/automations`, `/interrupted` |
 | Models | `/connect`, `/models`, `/model`, `/model-settings`, `/thinking`, `/effort`, `/context-window`, `/kupo` |
 | Review workflows | `/review`, `/security`, `/performance`, `/debug`, `/impeccable`, `/continue`, `/orchestrate`, `/spawn`, `/spar`, `/critique` |
 | Files and documents | `/files`, `/file`, `/attach-file`, `/attach-image`, `/attach-folder`, `/attach-github`, `/attach-session`, `/attach-document`, `/documents`, `/document-read`, `/document-search` |
@@ -253,7 +260,7 @@ Settings editors have their own Save behavior. A save shortcut is not a prompt s
 | F3 | Follow the latest output. |
 | F4 | Insert the completed native dictation transcript. |
 | F5 / F6 | Artifact library / actual question choices. |
-| F7 / F8 / F9 | Dashboard / profiles / scheduled-prompt Automations view. |
+| F7 / F8 / F9 | Dashboard / profiles / Automations, with recurring automations and scheduled prompts. |
 | F10 / F11 | Retry the eligible model failure / automatic Kupo mode. |
 | PgUp/PgDn | Read history without changing the draft. |
 | Esc / Ctrl+Q | Return to composer / save and leave. |

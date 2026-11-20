@@ -51,6 +51,8 @@ To create a PR:
 
 GitHub writes, reviews, releases, rebases, and merges keep their separate source, account, root, and head checks. An unknown write is not permission to create a second operation.
 
+Agents also get typed GitHub tools. `github_read` reads tags, the latest or a tagged release, check annotations, file contents, repository settings, rulesets, and branch rules. `github_write` covers comments, review replies, resolving threads, releases, and repository settings in the project's own repository, each behind a review. It opens draft pull requests only; merging, approving, and deleting stay with you.
+
 ## Watch PR CI
 
 In **Code change / Actions**, choose the actual PR and Review exact CI watch. The review binds its account, project/worktree root, and current head.
@@ -170,6 +172,10 @@ The index belongs to the actual Local or pinned SSH root. Changed or ignored fil
 Save non-sensitive coding conventions only. Memory is not a place for passwords, personal data, or private customer records.
 
 ## Skills, plugins, and evolution
+
+The **Customize** view next to Automations has **Skills**, **Marketplace**, and **Tools** tabs. Turn installed skills on or off, install a skill from a configured source into one project or every project, and review the agent's toolsets.
+
+Scripts you write in **Customize / Tools** aren't tied to a project: they work in every chat, in the chat's working folder. A project script with the same name replaces the every-chat one in that project. Each script goes through the same review as a model proposal. See [Scripts](../../vendor/moguri/docs/settings/scripts.md).
 
 **Settings / Instructions / Skills / Skill gateway** accepts a local folder, a public GitHub repository, or a direct HTTPS ZIP source. Find skills, inspect exact bytes, then choose the skill you want.
 
