@@ -14,7 +14,7 @@ moguri agent-terminal list --session SESSION_ID
 
 Inspect retained arguments and results instead of inferring success from a tool name. Agent terminal contains approved agent commands, not private User-console history.
 
-**Tools and MCP / Tool preference order** ranks equivalent available methods. Factory order is MCP through Gateway, direct MCP, REST, then CLI. Ranking does not authenticate or install a tool, change Env, or retry an unknown write.
+**Settings / Integrations / MCP gateway / [Tool preference order](../../vendor/moguri/docs/settings/mcp-gateway.md#tool-preference-order)** ranks equivalent available methods. Factory order is MCP through Gateway, direct MCP, REST, then CLI. Ranking does not authenticate or install a tool, change Env, or retry an unknown write.
 
 ## Git operations
 
@@ -37,7 +37,7 @@ Local Git mutation adapters do not borrow a controller checkout for unsupported 
 
 ## GitHub issues and pull requests
 
-Authenticate the GitHub CLI yourself when you want authenticated project operations. Copilot login and private-update access are separate credentials.
+Authenticate the GitHub CLI yourself when you want authenticated project operations. Copilot login and the optional update token are separate credentials.
 
 **Code change** offers project PR lookup and reviewed creation. **Work item** provides the issue flow. Starting a session From PR or From work item captures the reviewed source into an unsent draft; it does not automatically check out a branch or start a model.
 
@@ -50,6 +50,8 @@ To create a PR:
 5. Inspect the returned canonical link and operation status.
 
 GitHub writes, reviews, releases, rebases, and merges keep their separate source, account, root, and head checks. An unknown write is not permission to create a second operation.
+
+Agents also get typed GitHub tools. `github_read` reads tags, the latest or a tagged release, check annotations, file contents, repository settings, rulesets, and branch rules. `github_write` covers comments, review replies, resolving threads, releases, and repository settings in the project's own repository, each behind a review. It opens draft pull requests only; merging, approving, and deleting stay with you.
 
 ## Watch PR CI
 
@@ -91,7 +93,7 @@ moguri linear import PROJECT_ID
 
 ## Native MCP gateway
 
-Use **Settings / MCP gateway** to configure trusted stdio or Streamable HTTP servers. Discovery can start the configured local executable, so review it before enabling.
+Use **Settings / Integrations / MCP gateway** to configure trusted stdio or Streamable HTTP servers. Discovery can start the configured local executable, so review it before enabling.
 
 HTTP normally requires HTTPS. Explicit loopback HTTP is supported. Credentials belong in the OS keychain, not repo JSON, prompts, or shell arguments.
 
@@ -154,7 +156,7 @@ Forwarded access can be retained by the host. Refresh credentials do not leave t
 
 ## Repository memory
 
-**Settings / Repository memory** has separate indexing and model-context switches. Both start off.
+**Settings / Instructions / Repository memory** has separate indexing and model-context switches. Both start off.
 
 The index uses local lexical vectors and a source graph, not a downloaded embedding model or external embeddings provider. Ignore rules, protected paths, symlinks, and source limits apply.
 
@@ -171,7 +173,11 @@ Save non-sensitive coding conventions only. Memory is not a place for passwords,
 
 ## Skills, plugins, and evolution
 
-**Settings / Instructions / Skill gateway** accepts a local folder, a public GitHub repository, or a direct HTTPS ZIP source. Find skills, inspect exact bytes, then choose the skill you want.
+The **Customize** view next to Automations has **Skills**, **Marketplace**, and **Tools** tabs. Turn installed skills on or off, install a skill from a configured source into one project or every project, and review the agent's toolsets.
+
+Scripts you write in **Customize / Tools** aren't tied to a project: they work in every chat, in the chat's working folder. A project script with the same name replaces the every-chat one in that project. Each script goes through the same review as a model proposal. See [Scripts](../../vendor/moguri/docs/settings/scripts.md).
+
+**Settings / Instructions / Skills / Skill gateway** accepts a local folder, a public GitHub repository, or a direct HTTPS ZIP source. Find skills, inspect exact bytes, then choose the skill you want.
 
 ```sh
 moguri skills sources
@@ -231,7 +237,7 @@ Owned app/Playwright tools and interactive HTML outputs keep their session and p
 
 ## Voice dictation
 
-Open **Settings / Voice dictation**, review the model license/runtime, and authorize the pinned local model download. Preparing the native runtime does not download weights or open a microphone by itself.
+Open **Settings / Interface / Voice dictation**, review the model license/runtime, and authorize the pinned local model download. Preparing the native runtime does not download weights or open a microphone by itself.
 
 In the desktop:
 
@@ -263,7 +269,7 @@ System-prompt edits require the displayed risk acknowledgement and affect later 
 
 In-app and OS notifications have separate settings. Marking attention read does not answer a question, approve a tool, resume work, or clear the underlying failure.
 
-Private update access uses a separate read-only release credential in the secret backend. It is not Copilot login or project GitHub CLI access. Installation has an exact old/new app review and an explicit restart. Integrity checks do not imply Apple notarization.
+Updates come from public GitHub Releases and need no token. An optional read-only release token under **Settings / General / [GitHub updates](../../vendor/moguri/docs/settings/general.md#github-updates)** is needed only while the repository is private or to raise GitHub's rate limit. It is not Copilot login or project GitHub CLI access. Installation has an exact old/new app review and an explicit restart. Integrity checks do not imply Apple notarization.
 
 Storage relocation reviews all profiles, saved artifacts, active owners, and original resource roots. Use **Settings / Sessions / Retention / Change storage location** rather than copying a live database.
 

@@ -139,7 +139,7 @@ moguri session kupo-mode performance --session SESSION_ID
 
 Balanced is the default automatic mode. Savings and Performance require the appropriate reviewed model evaluation and reference-price evidence. They do not infer quality classes from a model name or treat hosted access as free usage.
 
-Review those sources in **Settings / Kupo routing / Review model evaluations and reference prices**. Narrow the approved pool or hosted task-data consent there when needed.
+Review those sources in **Settings / Kupo routing / [Add model scores and prices](../../vendor/moguri/docs/settings/kupo-routing.md#add-model-scores-and-prices)**. Narrow the approved pool or hosted task-data consent there when needed.
 
 Existing explicit Single or Compound policies are not silently converted into automatic mode. Their classifier, pool, source reviews, and transport limits remain separate.
 

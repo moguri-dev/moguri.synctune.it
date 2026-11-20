@@ -2,66 +2,23 @@
 
 Moguri has a desktop app, an OpenTUI terminal client, a CLI, and an importable SDK. They connect to the same local service, which stores sessions and handles approvals.
 
-There is no public installer or npm-registry package linked from this site yet. These instructions apply to a trusted development app, a source checkout, or a packed SDK archive supplied by the project maintainer. Mobile clients and IDE tools are not installation options here.
+This guide starts after installation. To install Moguri, follow [Installation](../../vendor/moguri/docs/installation.md). No public release has been published yet; the [download page](../../download/index.html) shows the current status. Mobile clients and IDE tools are not available.
 
 ## Requirements
 
 | What you want to use | Requirements |
 | --- | --- |
-| Desktop app | A matching development app for your platform. The current native delivery is a macOS alpha. |
-| Source checkout or SDK consumer | Node 26.4 or newer within Node 26, npm, and platform-compatible native dependencies. |
+| Desktop app, TUI, and CLI | A Mac with Apple silicon and a Moguri release. There are no Intel, Linux, or Windows release builds. |
 | GitHub Copilot models | A Copilot-entitled account, permission under its account policies, and network access. |
-| Your own model server | An explicitly configured OpenAI-compatible endpoint and accurate model capability declarations. |
+| Other hosted providers | An OpenRouter key or sign-in, an Anthropic API key, an OpenAI API key, or a ChatGPT account. See [Providers](../../vendor/moguri/docs/settings/providers.md). |
+| Your own model server | An explicitly configured OpenAI-compatible endpoint and accurate model capability declarations. See [Local models](../../vendor/moguri/docs/settings/local-models.md). |
 | Git and GitHub workflows | Git and, for authenticated GitHub operations, the GitHub CLI installed and signed in by you. |
-| Remote execution | A host you control with the matching packed Moguri worker, compatible Node, an independently verified host key, and an explicit workspace mapping. |
-| Managed Sandbox | Supported Apple-silicon macOS, the required Apple Containerization runtime, and separately reviewed, qualified SendBox setup. |
+| Remote execution | A host you control with the matching Moguri build, an independently verified host key, and an explicit workspace mapping. See [Remote SSH](../../vendor/moguri/docs/settings/remote-ssh.md). |
+| Sandbox | Apple-silicon macOS and the separately reviewed SendBox setup, which installs its own pinned runtime. See [Sandbox](../../vendor/moguri/docs/settings/sandbox.md). |
 
-Installing an app or SDK does not select a model, sign you in, download model weights, or grant tools permission.
+Installing the app does not select a model, sign you in, download model weights, or grant tools permission.
 
-## Desktop app
-
-If you receive a trusted DMG, mount it and drag `Moguri.app` to the Applications shortcut. Open the installed copy yourself. Running the app directly from the mounted image is not the managed installation.
-
-1. Open **Settings / Models / Providers**.
-2. Sign in to GitHub Copilot, or configure an OpenAI-compatible endpoint.
-3. Create a project or a project-free chat.
-4. Select a model in the composer.
-5. Check Env, Autonomy, and Budget before sending.
-
-The native app is still an alpha. Integrity checks and ad-hoc signing are not Apple notarization. Get a corrected matching build when installation fails rather than disabling OS protections globally.
-
-## Build a source checkout
-
-Obtain source access from the maintainer. Run these commands from the Moguri source root, not from the website repository:
-
-```sh
-npm ci
-npm run build
-npm start
-```
-
-`npm start` opens the TUI. To open the development desktop app instead:
-
-```sh
-npm run desktop
-```
-
-For a one-shot CLI command without opening either UI:
-
-```sh
-npm run cli -- status
-node bin/moguri.mjs --help
-```
-
-The source installation has native setup steps. Do not use the website's `--ignore-scripts` installation recipe for an operational Moguri CLI. If your npm installation uses a script allowlist, review the pending steps and approve only the required Moguri, pinned Node, and native-helper steps.
-
-Rebuild after changing source. An already running service does not silently replace itself with the new code. Restart through the matching build when required:
-
-```sh
-node bin/moguri.mjs service restart
-```
-
-Restart interrupts active model and tool work. Saved drafts, unclaimed queues, history, and original receipts remain. See [troubleshooting](troubleshooting.md#startup-and-version-mismatches) before restarting an unhealthy or unconfirmed owner.
+Contributors with access to the source repository build from source instead; see [Development setup](../../vendor/moguri/docs/development.md).
 
 ## Install the terminal command
 
@@ -86,7 +43,7 @@ The installer refuses existing files, symlinks, and unsafe parent directories. I
 
 ## Connect GitHub Copilot
 
-In the desktop app, choose **Sign in** under **Settings / Models / Providers / GitHub Copilot**. In the TUI, run `/connect`.
+In the desktop app, choose **Sign in** under **Settings / Models / Providers / GitHub Copilot**. In the TUI, press Ctrl+L or run `/connect`.
 
 Open the displayed GitHub authorization URL yourself and enter the one-time code. The flow can enable eligible account model policies, which Moguri discloses before authorization. It does not use credentials from another editor, `gh`, or the Copilot CLI.
 

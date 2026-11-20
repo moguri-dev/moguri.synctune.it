@@ -156,7 +156,7 @@ Updating the public runtime inventory does not install or activate another versi
 
 ## Require containment
 
-**Guardrails / Require qualified SendBox** can require whole-descendant containment for new work:
+In **Settings / Guardrails**, the allowed-environment policy option **Require Sandbox (whole-session containment)** can require whole-descendant containment for new work:
 
 ```sh
 moguri containment status

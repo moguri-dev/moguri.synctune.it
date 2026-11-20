@@ -2,7 +2,7 @@
   "name": "moguri-website",
   "version": "1.0.0",
   "private": true,
-  "description": "The dependency-free Moguri website",
+  "description": "The Moguri website: landing, downloads, user guide and developer docs",
   "type": "module",
   "engines": {
     "node": ">=26 <27"
@@ -11,7 +11,9 @@
     "dev": "npm run build && node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "test": "node --check app.js && npm run build && node --test tests/*.test.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "check:links": "npm run build && node scripts/check-links.mjs",
+    "sync:moguri": "node scripts/sync-moguri.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

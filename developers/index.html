@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Moguri developer documentation: architecture, the shared SDK and CLI, local setup, build and test commands, releasing and contribution guidance.">
+  <meta name="theme-color" content="#F4EFE9">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Moguri developer docs">
+  <meta property="og:description" content="Architecture, the SDK, local setup, checks and how to contribute to Moguri.">
+  <meta property="og:url" content="{{CANONICAL}}">
+  <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
+  <meta property="og:image:alt" content="Moguri's mascot and wordmark: Power on your terms.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{CANONICAL}}">
+  <link rel="icon" type="image/svg+xml" href="{{ROOT}}assets/favicon.svg">
+  <link rel="icon" sizes="any" href="{{ROOT}}assets/favicon.ico">
+  <link rel="apple-touch-icon" href="{{ROOT}}assets/apple-touch-icon.png">
+  <link rel="preload" href="{{ROOT}}assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="{{ROOT}}assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="{{ROOT}}styles.css">
+  <script src="{{ROOT}}app.js" defer></script>
+  <title>Moguri developer docs</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{HEADER}}
+  <main id="main" tabindex="-1" class="docs-layout shell">
+    <aside class="docs-nav">
+      {{NAVIGATION}}
+      <p class="docs-nav-label">On this page</p>
+      <nav aria-label="On this page"><a href="#how-it-works">How it works</a><a href="#start">Start</a><a href="#architecture">Architecture and API</a><a href="#project">Project</a><a href="#source">Source code</a></nav>
+    </aside>
+    <article class="docs-article">
+      <span class="status"><span class="beacon" aria-hidden="true"></span>macOS alpha, {{VERSION}}</span>
+      <h1>Developer docs</h1>
+      <p class="docs-lead">For people building on Moguri's SDK or contributing to Moguri itself: architecture, the shared SDK and CLI, local setup, checks, releases and contribution rules.</p>
+
+      <section class="docs-section" id="how-it-works" aria-labelledby="how-title">
+        <h2 id="how-title">How Moguri is built</h2>
+        <p>The desktop app, terminal UI and CLI are clients of one local service, and they all use the same importable SDK. The service records everything as an append-only, versioned event stream in an encrypted SQLite store and migrates it forward on upgrade. Model calls and tools run in supervised workers the service can cancel.</p>
+        <ul>
+          <li>TypeScript on Node.js 26, with Electron and React for the desktop app and OpenTUI for the terminal UI.</li>
+          <li>One service writer and one shared typed command protocol. Commands carry idempotency IDs, and editable data carries revision checks.</li>
+          <li>Clients can't approve on a model's behalf, silently substitute a model or backend, or reset accounting.</li>
+        </ul>
+        <p>Read the <a href="architecture.html">architecture overview</a> for the contracts, and the <a href="specification.html">implementation specification</a> for the target product.</p>
+      </section>
+
+      <section class="docs-section" id="start" aria-labelledby="start-title">
+        <h2 id="start-title">Start</h2>
+        <p><a href="development.html">Development setup</a> lists the toolchain and every check, from <code>npm run typecheck</code> to the hidden Electron end-to-end suite. CI runs only after merging to <code>main</code>, so contributors run the relevant checks locally before opening a pull request.</p>
+        {{CARDS:developers:Start}}
+      </section>
+
+      <section class="docs-section" id="architecture" aria-labelledby="architecture-title">
+        <h2 id="architecture-title">Architecture and API</h2>
+        {{CARDS:developers:Architecture and API}}
+      </section>
+
+      <section class="docs-section" id="project" aria-labelledby="project-title">
+        <h2 id="project-title">Project</h2>
+        {{CARDS:developers:Project}}
+      </section>
+
+      <section class="docs-section" id="source" aria-labelledby="source-title">
+        <h2 id="source-title">Source code</h2>
+        <p>Moguri is MIT-licensed, but its source repository isn't public yet. Until it is, links to it would return 404, so this site doesn't link to it. Pages marked as published from the source repository are exact copies of its documentation at commit <code>{{COMMIT}}</code>.</p>
+        <ul>
+          <li>Report security issues privately to <a href="mailto:security@mb-consulting.dev">security@mb-consulting.dev</a>, as the <a href="security.html">security policy</a> describes.</li>
+          <li>Follow <a href="https://github.com/moguri-dev">Moguri on GitHub</a> for the public repository and releases.</li>
+          <li>The website itself is public: <a href="https://github.com/moguri-dev/moguri.synctune.it">moguri-dev/moguri.synctune.it</a>.</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+  {{FOOTER}}
+</body>
+</html>
