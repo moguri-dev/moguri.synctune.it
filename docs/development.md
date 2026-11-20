@@ -1,11 +1,29 @@
 # Website development
 
-The site uses plain HTML, CSS, and JavaScript. Node 26 and npm are only needed
-for development, building the publishable directory, and running checks.
-Marked is a build-time dev dependency for the usage guides, not browser code.
-There is no application server or runtime package dependency.
+The site is plain HTML, CSS and JavaScript with no runtime dependencies,
+analytics or cookies. Node 26 and npm are only needed to build `dist/` and run
+checks. Marked is a build-time dev dependency that renders Markdown.
 
-## Local setup
+## Structure
+
+| Path | What it is |
+| --- | --- |
+| `index.html`, `download/index.html`, `docs/index.html`, `developers/index.html`, `404.html` | Page templates with `{{MARKERS}}` for the shared header, footer, sidebar, cards and screenshots |
+| `docs/usage/*.md` | Task guides written for this website (Getting started, sessions, models, execution, tools, CLI, troubleshooting, SDK quickstart) |
+| `docs/layout.html` | The page shell for every Markdown page |
+| `vendor/moguri/` | Moguri's own documents, synced unchanged. Never edit these by hand |
+| `vendor/moguri/SOURCE.json` | The source repository, commit, version and SHA-256 of every synced file and screenshot |
+| `assets/screenshots/` | Real desktop captures from Moguri's design-capture test |
+| `data/releases.json` | Published releases. Download links come only from here |
+| `scripts/catalogue.mjs` | The single list of pages, routes, synced documents, screenshots and private repositories |
+| `scripts/build.mjs` | Builds `dist/` and fails on any broken local link or anchor |
+
+The build publishes the user guide under `/docs/`, the developer docs under
+`/developers/`, the download page under `/download/` and the landing page at `/`.
+Only catalogued pages publish. Markdown sources, templates, `vendor/`, `data/`
+and scripts stay out of `dist/`.
+
+## Local setup and preview
 
 ```sh
 npm ci --ignore-scripts
@@ -13,93 +31,138 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:4173`. The preview binds only to loopback and serves
-`dist/`, not source files. Stop it with Ctrl+C. After editing source, restart
-`npm run dev` to rebuild. Use `node scripts/serve.mjs --port 4174` to preview
-an existing build on another port.
+`dist/`, not source files. Stop it with Ctrl+C and rerun `npm run dev` after
+editing. `node scripts/serve.mjs --port 4174` previews an existing build on
+another port.
 
-## Build and checks
+## Checks
 
 ```sh
 npm test
-PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium --only-shell
 npm run test:browser
+npm run check:links
 ```
 
-`npm test` checks JavaScript syntax, builds the site, and checks every published
-page, local link, anchor, metadata field, font license, and the actual output.
-It also checks the guide renderer and shell, JavaScript, and JSON example syntax.
-`npm run build` builds `dist/` independently. The build includes only the
-website pages, CSS, JavaScript, public assets, and hosting metadata. Build work
-is staged before replacing `dist/`; invalid Markdown leaves the old preview intact.
+`npm test` checks JavaScript syntax, builds the site and runs the Node tests:
+page structure and metadata, every local link and anchor, the sitemap, the
+alpha status line, source notes on synced pages, the download page, the
+Markdown renderer, release rendering, and the integrity of `vendor/moguri/`
+against `SOURCE.json`.
 
-Playwright starts and stops its own loopback preview on port 4187. Checks cover
-320px through 2560px layouts, interface tabs and keyboard focus, docs navigation,
-no-JavaScript content, reduced motion, local-only asset requests, WCAG AA checks,
-and HTTP error behavior. Screenshots and failure traces go to `test-results/`.
-All illustrated project names and conversations are fictional.
+`npm run test:browser` starts its own loopback preview on port 4187. It checks
+keyboard navigation, the interface tabs, the docs sidebars, layouts from 320px
+to 2560px without overflow or overlapping controls, no-JavaScript fallbacks,
+reduced motion, screenshots, HTTP errors, and axe WCAG 2.2 AA rules on every
+page. It needs Playwright's headless Chromium once:
 
-## GitHub Pages
+```sh
+PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium --only-shell
+```
 
-The Website workflow runs on pull requests, pushes to `main`, and manual runs.
-Draft PRs run the build and static checks. Ready PRs also run browser checks,
-including when a draft is marked ready and when a ready PR receives new commits.
-Main runs validate once and deploy the same tested artifact. PRs never deploy.
+If another project shares the Playwright cache with a different version, set
+`PLAYWRIGHT_BROWSERS_PATH` to a folder inside this repository instead.
 
-Before the first deployment, a repository admin must:
+`npm run check:links` builds the site, then requests every external URL. Run it
+before publishing and after adding a release. It needs network access, so CI
+doesn't run it.
 
-1. Set **Settings > Pages > Source** to **GitHub Actions**.
-2. Point the `moguri.synctune.it` DNS CNAME to `moguri-dev.github.io`.
-3. Set the Pages custom domain to `moguri.synctune.it` and enable HTTPS when
-   GitHub finishes verification.
+## Sync Moguri's documents and screenshots
 
-The checked-in `CNAME` and canonical URLs use that domain. The build generates
-the sitemap from the shared guide catalogue. The 404
-page uses root-relative assets for unknown nested URLs on the custom domain.
-A manual deployment must select `main`. Feature-branch manual runs validate
-but don't deploy. Obsolete PR runs cancel; deployment runs aren't interrupted.
+The user guide's reference pages and most developer pages are Moguri's own
+documents. To update them, change them in the Moguri repository first, then
+sync from a clean checkout of the commit you want to publish:
+
+```sh
+# In the Moguri checkout: build once, then capture the desktop app with generated fixtures.
+npm ci && npm run build
+MOGURI_DESIGN_CAPTURE_DIR=/absolute/captures MOGURI_DESIGN_CAPTURE_PREFIX=after \
+  npx playwright test tests/e2e/design-captures.spec.ts
+
+# In this repository:
+npm run sync:moguri -- --source /absolute/moguri --captures /absolute/captures
+npm test
+```
+
+The capture test runs hidden Electron windows on macOS with generated
+projects, conversations and models only. Use captures made from the same
+checkout you sync. The sync refuses uncommitted changes to synced files,
+replaces `vendor/moguri/` and `assets/screenshots/` as a whole and records the
+commit and hashes. Review the new screenshots for personal data before
+committing.
+
+To publish another Moguri document, add it to `canonicalPages` in
+`scripts/catalogue.mjs` and sync again. To add a screenshot, add it to
+`screenshots` with descriptive alt text and sync again.
+
+Links in synced documents are rewritten to their published pages. A link to a
+file that isn't published, or to a repository listed in `privateRepositories`,
+renders as plain text with a dotted underline and a screen-reader note, because
+those URLs return 404 to visitors. Remove a repository from that list when it
+becomes public. `unavailableLinks` does the same for dead external links found
+by `npm run check:links`; fix those upstream, then remove them.
+
+## Releases and download links
+
+The download page shows "No public release yet" until `data/releases.json`
+lists a release. After a release is published on GitHub **and** the
+repository is public, add it newest first:
+
+```json
+{
+  "repository": "mbianchidev/moguri",
+  "releases": [
+    { "version": "0.33.0-alpha.1", "date": "2026-12-01", "prerelease": true }
+  ]
+}
+```
+
+Then remove `mbianchidev/moguri` from `privateRepositories`, sync the docs from
+that release's commit, and run `npm test` and `npm run check:links`. The build
+refuses release links for a private repository, invalid SemVer, a wrong
+prerelease flag or a missing date. Asset names come from the release contract
+in `scripts/catalogue.mjs` (`releaseAssets`).
+
+## Writing guides
+
+Each guide in `docs/usage/` has one H1 matching its catalogue title. Heading
+anchors follow GitHub's rules, so the same links work on GitHub and on the site.
+Link to other pages with relative Markdown paths, for example
+`models.md#choose-a-model` or `../../vendor/moguri/docs/installation.md`. The
+build fails on links to unpublished files.
+
+Keep implemented capabilities separate from the roadmap and the product
+vision. Where a guide summarizes a setting, link to its Settings reference page
+and keep the Settings path current. Use generated examples only, and never
+include credentials, personal data or internal release records.
+
+## Deployment
+
+The Website workflow (`.github/workflows/site.yml`) runs on pull requests,
+pushes to `main` and manual runs. Draft PRs run `npm test`. Ready PRs and `main`
+also run the browser checks. Runs on `main` deploy the tested `dist/` artifact
+to GitHub Pages. PRs never deploy, and a manual run deploys only from `main`.
 External actions are pinned to full commit SHAs.
 
-## Content and artwork
+GitHub Pages isn't enabled yet. Before the first deployment, a repository
+admin must:
 
-Keep implemented capabilities distinct from qualification work and roadmap
-items. The current product is a development-stage macOS alpha, not a finished
-public v1. Don't add installer buttons or links to planned component repos until
-their public availability is confirmed. Desktop screenshots come from the
-actual Moguri 0.31.0-alpha.1 renderer using synthetic profile, project,
-conversation, and usage data. The terminal preview remains an illustration,
-and the SDK view is a diagram.
+1. Set **Settings > Pages > Build and deployment > Source** to **GitHub Actions**.
+2. Add a DNS `CNAME` record for `moguri.synctune.it` pointing to `moguri-dev.github.io`.
+3. Enter `moguri.synctune.it` as the custom domain in **Settings > Pages**, wait
+   for the DNS check, then turn on **Enforce HTTPS**.
+4. Optionally verify `synctune.it` under the organization's **Settings > Pages**
+   to prevent domain takeover.
 
-Keep full-resolution captures under `assets/screenshots/` unchanged. Serve the
-960px and 1440px uncropped PNG variants with `srcset`, preserving explicit
-dimensions and lazy loading. Full-size image links open the original 2880px
-captures. Review any replacement for personal data and update the capture
-fingerprints in `tests/screenshots.test.mjs` after verifying its provenance.
+Workflow-based Pages deployments ignore the `CNAME` file; it stays in `dist/`
+as a record of the intended domain. The 404 page uses root-relative paths, so it
+works on the custom domain at any URL depth.
 
-Moguri's approved mascot, wordmark, icons, social card, colors, and typefaces
-come from [Synctune branding](https://github.com/synctune-io/branding).
-Artwork and font files are copied without modification. Preserve the SIL Open
-Font License notices under `assets/fonts/licenses/` when redistributing.
-Typography follows the approved kit: Outfit for headings, Work Sans for body
-text, and Geist Mono for small technical labels.
-Fonts are self-hosted; the site makes no analytics, cookie, or external font requests.
+## Artwork
 
-## Editing usage guides
-
-`docs/usage/*.md` is the shared source for GitHub-readable guides and the website.
-Keep one H1 matching the guide title. The renderer generates unique section
-anchors and rewrites links such as `models.md#choose-a-model` to their published
-HTML route. Code fences remain text; there is no runtime syntax highlighter.
-
-`scripts/docs.mjs` defines the published guide catalogue, navigation, and sitemap.
-Add or remove a guide there rather than copying its metadata into each consumer.
-`docs/layout.html` is the shared page shell. The overview's `USAGE_GUIDES` marker
-becomes the guide list during the build.
-
-Edit `index.html`, `docs/index.html`, `docs/usage/`, `docs/layout.html`, `styles.css`,
-and `app.js`, not `dist/`. Only explicitly catalogued guides publish. Raw Markdown,
-layout templates, scripts, and this maintenance document stay out of deployment.
-
-Check instructions and CLI/SDK names against the current product implementation.
-Do not copy private implementation notes, credentials, historical qualification
-logs, or internal release records into a public guide. Describe release/runtime
-limits next to the affected operation, and use synthetic examples.
+The mascot, wordmark, icons, social card, colors and typefaces come from
+Synctune's approved Moguri branding and are copied without modification.
+Typography: Outfit for headings, Work Sans for body text and Geist Mono for
+small technical labels. Fonts are self-hosted; keep the SIL Open Font License
+notices in `assets/fonts/licenses/`. The terminal preview on the landing page
+is an illustration and the SDK view is a diagram; every other product image is
+a real capture.

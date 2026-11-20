@@ -44,3 +44,34 @@ for (const group of document.querySelectorAll("[data-interface-tabs]")) {
   activate(0);
   tablist.hidden = false;
 }
+
+// Docs sidebar menus start closed for small screens and open on wide ones.
+const menus = [...document.querySelectorAll("[data-docs-menu]")];
+if (menus.length) {
+  const wide = window.matchMedia("(min-width: 48rem)");
+  const sync = () => menus.forEach((menu) => { menu.open = wide.matches; });
+  wide.addEventListener("change", sync);
+  sync();
+}
+
+// Tables that overflow become focusable so keyboard users can scroll them.
+const tables = [...document.querySelectorAll(".docs-table")];
+if (tables.length) {
+  const update = () => tables.forEach((table) => {
+    if (table.scrollWidth > table.clientWidth) {
+      table.tabIndex = 0;
+      table.setAttribute("role", "region");
+      table.setAttribute("aria-label", "Scrollable table");
+    } else {
+      table.removeAttribute("tabindex");
+      table.removeAttribute("role");
+      table.removeAttribute("aria-label");
+    }
+  });
+  let frame = 0;
+  window.addEventListener("resize", () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(update);
+  });
+  update();
+}

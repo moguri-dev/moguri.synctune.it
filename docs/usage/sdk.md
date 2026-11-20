@@ -1,6 +1,6 @@
-# SDK usage
+# SDK quickstart
 
-The SDK powers Moguri's desktop app, CLI, and TUI. Use it to build a client or integrate with the same service contracts, not to bypass approvals or create a second authority over an existing store.
+The SDK powers Moguri's desktop app, CLI, and TUI. Use it to build a client or integrate with the same service contracts, not to bypass approvals or create a second authority over an existing store. The [SDK and CLI reference](../../vendor/moguri/docs/sdk.md) documents every entrypoint.
 
 ## Install a packed SDK
 

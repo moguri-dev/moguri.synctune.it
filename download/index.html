@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Download status, supported platforms, checksum verification and first-launch steps for the Moguri macOS alpha.">
+  <meta name="theme-color" content="#F4EFE9">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Download Moguri">
+  <meta property="og:description" content="Moguri is an alpha for macOS on Apple silicon. See the release status, verify your download and open it the first time.">
+  <meta property="og:url" content="{{CANONICAL}}">
+  <meta property="og:image" content="https://moguri.synctune.it/assets/social-card.png">
+  <meta property="og:image:alt" content="Moguri's mascot and wordmark: Power on your terms.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{CANONICAL}}">
+  <link rel="icon" type="image/svg+xml" href="{{ROOT}}assets/favicon.svg">
+  <link rel="icon" sizes="any" href="{{ROOT}}assets/favicon.ico">
+  <link rel="apple-touch-icon" href="{{ROOT}}assets/apple-touch-icon.png">
+  <link rel="preload" href="{{ROOT}}assets/fonts/Outfit-Bold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="{{ROOT}}assets/fonts/WorkSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="{{ROOT}}styles.css">
+  <script src="{{ROOT}}app.js" defer></script>
+  <title>Download Moguri | macOS alpha</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{HEADER}}
+  <main id="main" tabindex="-1" class="docs-layout shell">
+    <aside class="docs-nav">
+      {{NAVIGATION}}
+      <p class="docs-nav-label">On this page</p>
+      <nav aria-label="On this page"><a href="#release-title">Release status</a><a href="#platforms">Supported platforms</a><a href="#assets">Release files</a><a href="#verify">Verify the download</a><a href="#first-launch">Open it the first time</a><a href="#updates">Updates</a><a href="#source">Build from source</a></nav>
+    </aside>
+    <article class="docs-article">
+      <span class="status"><span class="beacon" aria-hidden="true"></span>macOS alpha, {{VERSION}}</span>
+      <h1>Download Moguri</h1>
+      <p class="docs-lead">Moguri is an alpha for Macs with Apple silicon. Release builds are ad-hoc signed and not notarized by Apple, so the first launch needs one extra step in System Settings.</p>
+
+      <section class="docs-section" aria-labelledby="release-title">
+        {{DOWNLOADS}}
+      </section>
+
+      <section class="docs-section" aria-labelledby="platforms">
+        <h2 id="platforms">Supported platforms</h2>
+        <div class="docs-content">
+          <div class="docs-table"><table>
+            <thead><tr><th>Platform</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>macOS on Apple silicon (arm64)</td><td>Alpha. The only platform with release builds.</td></tr>
+              <tr><td>macOS on Intel</td><td>Not supported. There are no Intel builds.</td></tr>
+              <tr><td>Linux</td><td>No release builds. Contributors can run part of the test suite on Linux, which isn't release qualification.</td></tr>
+              <tr><td>Windows</td><td>Not supported.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <p>You also need an account with a supported model provider, such as GitHub Copilot, or a local model you configure yourself. Moguri doesn't include a model. The Sandbox environment installs its own pinned runtime through a reviewed setup, and the Remote environment needs an SSH machine you control. Both are optional.</p>
+      </section>
+
+      <section class="docs-section" aria-labelledby="assets">
+        <h2 id="assets">Release files</h2>
+        <p>Every release publishes the same five files on GitHub Releases. Download the DMG and <code>SHA256SUMS</code> from the same release.</p>
+        <div class="docs-content">
+          <div class="docs-table"><table>
+            <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>Moguri-&lt;version&gt;-macos-arm64.dmg</code></td><td>The disk image you install from.</td></tr>
+              <tr><td><code>SHA256SUMS</code></td><td>SHA-256 checksums for every file in the release.</td></tr>
+              <tr><td><code>Moguri-&lt;version&gt;-macos-arm64.zip</code></td><td>The archive the in-app updater downloads.</td></tr>
+              <tr><td><code>Moguri-&lt;version&gt;-macos-arm64.manifest.json</code></td><td>The updater's integrity manifest for the ZIP.</td></tr>
+              <tr><td><code>Moguri-&lt;version&gt;-provenance.json</code></td><td>The exact source commit and each file's SHA-256.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <p>The release workflow checks that the published files are exactly the files uploaded for that tag. It doesn't prove the binaries rebuild bit for bit from source. <a href="../developers/releasing.html">Releasing</a> explains what each check proves.</p>
+      </section>
+
+      <section class="docs-section" aria-labelledby="verify">
+        <h2 id="verify">Verify the download</h2>
+        <p>In the folder that contains both files, run:</p>
+        <div class="docs-content"><pre><code>shasum -a 256 --check --ignore-missing SHA256SUMS</code></pre></div>
+        <p>It must print <code>OK</code> for the DMG. Don't open a file that fails this check.</p>
+      </section>
+
+      <section class="docs-section" aria-labelledby="first-launch">
+        <h2 id="first-launch">Open it the first time</h2>
+        <ol class="docs-steps">
+          <li>Open the DMG and drag Moguri onto Applications.</li>
+          <li>Open Moguri from Applications. macOS blocks the first launch because the app isn't notarized.</li>
+          <li>Only if the checksum check passed: open <strong>System Settings &gt; Privacy &amp; Security</strong>, scroll down and click <strong>Open Anyway</strong>, then confirm <strong>Open</strong>.</li>
+        </ol>
+        <p>This follows <a href="https://support.apple.com/en-us/102445">Apple's guidance for opening apps that aren't notarized</a> and saves an exception for this app only. Don't turn off Gatekeeper. If macOS says the app is damaged instead of offering Open Anyway, read <a href="../docs/installation.html#macos-launch-troubleshooting">macOS launch troubleshooting</a>.</p>
+        <div class="docs-callout">After the first launch, sign in to a model provider and send your first prompt. <a href="../docs/getting-started.html">Getting started</a> walks through it, and the <a href="../docs/installation.html">installation guide</a> covers the command line tool, data location and removal.</div>
+      </section>
+
+      <section class="docs-section" aria-labelledby="updates">
+        <h2 id="updates">Updates</h2>
+        <p>By default, Moguri checks GitHub Releases at startup and every four hours. It verifies the updater ZIP against the release's manifest and stages it, and you confirm the install and restart. Public releases need no token. You can also update by hand: quit Moguri, verify the new DMG and replace the app in Applications.</p>
+        <p>Upgrades migrate local data forward on first start, and you can't go back to an older version afterward.</p>
+      </section>
+
+      <section class="docs-section" aria-labelledby="source">
+        <h2 id="source">Build from source</h2>
+        <p>Moguri's source repository isn't public yet, so there's no public way to build it. When it opens, the <a href="../developers/development.html">development setup</a> describes the toolchain and commands. Moguri is licensed under the <a href="../developers/license.html">MIT License</a>.</p>
+      </section>
+    </article>
+  </main>
+  {{FOOTER}}
+</body>
+</html>
