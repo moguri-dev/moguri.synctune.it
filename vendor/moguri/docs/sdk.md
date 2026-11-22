@@ -329,9 +329,9 @@ and inspect its original receipt rather than sending a replacement.
 | `scheduledPrompts.create(sessionId, timing, draftRevision?)` | Capture and consume only the exact saved draft/attachments/controls into a durable unsent record. |
 | `scheduledPrompts.list(sessionId?)` | Read this profile's original scheduled records. `scheduled`/`blocked` stay outside model history; `queued` is claimed but not a sent prompt until `admitted`. |
 | `scheduledPrompts.sendNow(id, revision?)` / `cancel(id, revision?)` | Share one-at-most timer ownership; cancel only undispatched original input, not an unrelated turn. |
-| `routing.modes(sessionId)` | Read mode readiness and genuine unmet gates. No classification or model call. |
+| `routing.modes(sessionId)` | Read mode readiness and genuine unmet gates. Each available mode also lists `workflows` (D56): Single, Cascade, Critique and Council with availability, a reason, eligible `[draft, escalation or critic]` `pairs` and eligible Council `modelIds`, ignoring a particular request's size. No classification or model call. |
 | `routing.options(sessionId, proposedOptions?)` | Review exact shared working-window/thinking eligibility for automatic, explicit Single or reviewed Compound Kupo in the owning Env. Compound includes its classifier and every eligible route role's real output bound. Returns eligible model IDs, genuine common presets/efforts and an explicit unavailable reason, without changing controls or calling a model. |
-| `sessions.kupoMode(sessionId, mode, revision?)` | Explicitly select `balanced`, `savings` or `performance` for automatic Kupo without changing autonomy/Env. |
+| `sessions.kupoMode(sessionId, mode, revision?)` | Explicitly select `balanced`, `savings`, `performance` or `dynamic` for automatic Kupo without changing autonomy/Env. Dynamic records the concrete mode it applied as `plan.mode` on each routing turn. |
 | `routing.profileDraft(input)` | Prepare an unpersisted source-review assertion; explicitly save its exact profile in the full Kupo policy after reviewing it. |
 | `tools.history(sessionId, input?)` | Page retained original public prompt/model/tool/answer sources, including after compaction; no private roles, console data, hidden thinking, drafts or queued input. |
 
@@ -346,6 +346,13 @@ and inspect its original receipt rather than sending a replacement.
 
 `settings.interactions.continueInterrupted` (`ask` or `always`) controls
 whether the service continues interrupted chats automatically after a restart.
+`settings.interactions.autoSendQueue` (protocol 117, absent means `true`) starts
+the top prompt the user held after each completed turn
+([D53](architecture/decisions.md#d53-queued-prompts-you-held-start-after-each-completed-turn)).
+Protocol 117 also adds optional `settings.user.name`, which the service adds to
+every chat's system prompt as an escaped `<user-name>` block, and
+`settings.onboarding.completedAt`, which clients use to show first-run setup once
+([D54](architecture/decisions.md#d54-getting-started-an-optional-name-and-a-quieter-desktop-look)).
 `executeInterruptedCommand` is the shared `/interrupted` helper. See the
 [contract](architecture/interrupted-sessions.md).
 
@@ -353,18 +360,20 @@ whether the service continues interrupted chats automatically after a restart.
 
 | Surface | Contract |
 |---|---|
-| `automations.list(projectId?)` / `runs(automationId?)` | Read `Snapshot.automations` (deleted ones omitted) and recent `automationRuns` (latest 50 per automation plus every active run). |
-| `automations.create(projectId, definition, { enabled, controls? })` | Capture full controls from the project defaults plus explicit overrides. `enabled` is the explicit activation; nothing runs while paused. |
+| `automations.list(projectId?)` / `runs(automationId?)` | Read `Snapshot.automations` (deleted ones omitted) and recent `automationRuns` (latest 50 per automation plus every active run). `list(null)` returns only project-free automations. |
+| `automations.create(projectId, definition, { enabled, controls? })` | Capture full controls from the project defaults plus explicit overrides. `enabled` is the explicit activation; nothing runs while paused. Protocol 117: `projectId: null` creates a project-free automation from the global and profile defaults; it takes only prompt steps. |
 | `automations.update(id, definition, controls?, revision?)` | Replace name, schedule and steps; overrides apply on top of the captured controls. Active automations re-anchor at the edit. |
 | `automations.enable(id)` / `pause(id)` | Turn scheduling on from now, or stop future occurrences (an active run continues). |
-| `automations.runNow(id)` | Start one run now in a new chat; refused while a run is active. |
+| `automations.runNow(id)` | Start one run now in a new chat (a project-free chat with the captured Home binding when Local and `projectId` is null); refused while a run is active. |
 | `automations.stopRun(runId)` / `delete(id, { stopRunning? })` | Stop a run's chat so later steps never run; delete refuses an active run unless `stopRunning`. |
+| `attention.list({ type: "automation" })` | Protocol 117 Inbox entries for each run's start and outcome. `Attention.automation` holds `{ automationId, runId, runRevision, name, status }`; `sessionId` is the run's chat or null; `automationAttentionText` renders it. `attention.acknowledge` only marks an entry read. |
 
 `AutomationDefinition` is `{ name, schedule, steps }`; `parseAutomationWorkflow`
 reads the readable YAML/JSON workflow syntax after parsing, and
 `executeAutomationsCommand` is the shared `/automations` helper. Semantics for
-DST, missed and overlapping occurrences, script steps and restart are in the
-[automations contract](architecture/automations.md).
+DST, missed and overlapping occurrences, script steps, project-free runs, Inbox
+entries and restart are in the [automations contract](architecture/automations.md)
+and [D58](architecture/decisions.md#d58-project-free-automations-and-automation-runs-in-inbox).
 
 `ScheduledTiming` is `{kind:"delay",minutes,timeZone}` or
 `{kind:"at",at,timeZone,localTime,offsetMinutes}`. Use
@@ -398,7 +407,7 @@ remain distinct. Its classifier and qualified per-model mapping select actual
 thinking automatically; manual Kupo effort commands return `routing_effort`
 without mutation or inference. Old overrides remain retained and blocked until
 explicitly cleared; context and budgets are not silently changed. Performance
-still requires its qualified maximum context and xhigh/max. Complete future
+still requires its qualified maximum context and High or xhigh (never Max). Complete future
 reviews/revisions and finite holds use the same
 selected ceiling.
 
@@ -476,7 +485,11 @@ for the actual generated VM evidence and remaining client/environment gates.
 
 `sdk.browser.state(sessionId)` reports the actual desktop-owned pane and its
 current control identity. The user enables/disables access with the pane's
-**Agent control** switch. `mcp.tools` with `serverId: "builtin"` and query
+**Agent control** switch, or records the same per-chat choice with
+`sdk.sessions.browserControl(sessionId, enabled)` (`session.browser.control`,
+protocol 117, D61). The choice is `Session.browserAgentControl`; while it is on
+the desktop pane re-enables control with a fresh `controlId` whenever it
+attaches or recovers, and an explicit off revokes control in the service. `mcp.tools` with `serverId: "builtin"` and query
 `"navigate"` discovers `browser_navigate`; query `"browser"` discovers all six
 tools, including `browser_status` and `browser_snapshot`. Invoke through the
 existing `mcp.call`/`mcp_gateway` policy/approval flow, supplying its discovered
@@ -774,6 +787,16 @@ Protocol 116 adds bounded resources `tags`, `release-latest`, `release-tag {tag}
 `rulesets` and `branch-rules {branch}`, and the reviewed
 `github.repo.settings` action. `GithubModelActionSchema`/`isGithubModelAction`
 name the subset the `github_write` agent tool may preview and execute.
+Protocol 118 (D64) adds `commits {number}`, `timeline {number}`, `labels` and
+`assignees` resources, item metadata (labels, assignees, requested reviewers,
+counts, check start times, app and Actions run IDs) and the `github.pr.draft`
+(user and agent), `github.issue.labels`, `github.issue.assignees` and
+`github.pr.reviewers` (user-only) actions; see
+[GitHub workflows](architecture/github-workflows.md). D65 adds the user-only
+`github.review.comment` action for one inline review comment on the reviewed
+PR head. Once a session has `prAssociations`, `sessions.organize` refuses any
+`prUrl` change with `session_pr_locked`; each association's `pullRequest`
+holds that PR's latest observed state.
 
 `capabilities.propose(projectId | null, kind, name, content)` accepts `null`
 (protocol 116) for skills and scripts that apply to every chat;
@@ -825,7 +848,7 @@ and [usage](setup.md#retained-pull-request-ci-watches).
 
 Native file/data/readback operations are factory-policy approved rather than
 fake human decisions. Stricter explicit review/deny rules still win. Scripts
-and external MCPs require normal approval/delegation. Explicit Autopilot/Max
+and external MCPs require normal approval/delegation. Explicit Autonomous/Autopilot
 remains automatic; this policy does not bypass hard environment or budget gates.
 
 `webAllowlist.list(sessionId?)` returns effective Local entries for that exact
@@ -870,12 +893,15 @@ execution-tool grant. `/approve project tool` uses the actual selected folder
 member, and `approvalProject(session, call.arguments.repository)` exposes that
 same unambiguous project identity for client choice controls.
 
-`sessions.autonomy(id, "Autopilot")` explicitly sets
-`controls.automaticApprovals: true`; Max does the same while requiring its
-qualified decision provider. `automaticApprovalsEnabled(controls)` is the shared
-check: Autopilot/Max approve automatically unless `automaticApprovals` is
+`sessions.autonomy(id, "Autopilot")` (shown as Autonomous) explicitly sets
+`controls.automaticApprovals: true`; `"Autopilot Max"` (shown as Autopilot) does
+the same while requiring its qualified decision provider. SDK inputs and JSON
+always use the stored values; `autonomyLabel(value)` and `envLabel(value)` return
+the display names (`Remote` is shown as Remote host), and `parseAutonomyInput`
+and `parseEnvInput` read typed names for slash-style input (D60). `automaticApprovalsEnabled(controls)` is the shared
+check: Autonomous/Autopilot approve automatically unless `automaticApprovals` is
 explicitly `false` (the bounded opt-out). Unmarked legacy sessions and saved
-global/profile/project Autopilot defaults count as automatic; new sessions
+global/profile/project Autonomous defaults count as automatic; new sessions
 resolve the marker to `true`. Original events are not rewritten.
 Manual/Guided never gain automatic approval through an inherited marker.
 
@@ -960,6 +986,26 @@ agent-written files with their linked session. `suggestions.preview` results
 include `tools`, repeated requests a script could handle. Contract:
 [skills, tools and artifacts](architecture/skills-tools-artifacts.md).
 
+Protocol 117 ([D57](architecture/decisions.md#d57-skills-list-per-skill-switches-and-marketplace-trust))
+adds the shared skill list. `skills.sources(signal?)` returns metadata of every
+skill in the enabled sources plus each unreadable source's error (`skills.list`
+query; never session-scoped). `skills.list(signal?)` combines that with the
+snapshot's registry through the browser-safe `skillListGroups` and returns
+`{ groups, failures }`: personal repositories (`Personal - {repo name}`),
+marketplace providers, folders, plugins, All projects and each project, with
+every item's `state` (`on`, `off`, `untrusted` or `changed`, from the shared
+`sourceSkillState`). `skills.setEnabled(sourceId, path, enabled)` saves one
+source skill's switch (`skill.source.toggle`); a marketplace skill must be
+trusted before it can be turned on. `skills.trust(sourceId, path, digest,
+packageDigest)` sends `skill.trust`: the service re-reads the source, checks
+both SHA-256 values and records the actual user's command in
+`settings.skillSwitches`. A generic `settings.update` can't add or change a
+trust record (`skill_trust_review`). Remote sources take an optional
+`personal: true` (on by default); otherwise they are marketplaces. Session-scoped
+`skills.find`/`skills.read`, `skills.use` and `use_skill` only offer and load
+skills that are on; a withheld skill fails with `skill_untrusted`. Trusting and
+switching grant no tools.
+
 `skills.find(query, { sessionId?, sourceId?, offset?, expectedCatalogDigest?, signal? })`
 refreshes enabled registered skills and explicit `settings.skillSources` folders
 or HTTPS archives. It returns eight bounded metadata entries, source/path,
@@ -1022,7 +1068,7 @@ hooks and other/deleted sessions are excluded. `tools.state` queries the
 canonical in-memory todo/memory projection, not persistent internal tables.
 
 `sessions.autonomy(sessionId, autonomy, expectedRevision?)` is an explicit
-selection, including reselecting a legacy Autopilot value. It retains actual-user
+selection, including reselecting a legacy `Autopilot` (Autonomous) value. It retains actual-user
 command provenance and automatic-approval consent across later turns/restarts.
 Loading old values or changing an unrelated setting cannot broaden old consent.
 An actual generic autonomy change also discards a copied Manual false marker.
@@ -1526,7 +1572,7 @@ another parent turn. There is deliberately no public `evaluate`, `answer`,
 
 `settings.decisions` defaults disabled with no selected model. Save an explicit
 `bounded-model` policy and available canonical model ID, then separately choose
-Autopilot Max in session controls. Fixed and kupo Single model selection stays
+`Autopilot Max` (shown as Autopilot) in session controls. Fixed and kupo Single model selection stays
 independent. Hosted inputs require separate consent; the root-less Local worker
 uses actual all-role token/USD admission and existing finishing holds.
 Protocol85 additionally binds tool-less subcalls to the original SSH/native
@@ -1535,7 +1581,7 @@ parent using version-2 `DecisionRecord`/`DecisionDocument` and
 identity and `owned-role-acknowledged` cleanup cannot become a Local record or
 proof of parent exit. An unchanged readiness read starts no inference.
 The dedicated Jev contract remains unqualified because the current API cannot
-enforce a positive output-token bound. Remote/native Max never executes on the
+enforce a positive output-token bound. Remote/native Autopilot never executes on the
 Local controller as a fallback.
 
 Existing `scheduledPrompts.create` can perform model-free native source
@@ -2062,7 +2108,9 @@ shared by `/stainless` and `moguri stainless`. Status reports `enabled`,
 `availability` (`missing`/`invalid`/`found`), the detected installation, whether
 the build is tested, the last in-memory check and `automation`
 (`off`/`unavailable`/`needs_check`/`incompatible`/`ready`). The `playwright` tool
-accepts `launch: { kind: "stainless", url }` and a `diagnostics` action. See the
+accepts `launch: { kind: "stainless", url }` and a `diagnostics` action. While
+the integration is on, `chromium` launches also run in Stainless or fail before
+launching when it is not ready, and results report `browser` (D61). See the
 [Stainless contract](architecture/stainless.md).
 
 ### Reviewed context compaction
@@ -2125,7 +2173,7 @@ not evidence about a different SSH account's model implementation.
 
 Reports are not signed attestations, independent-family proof, cost/quality
 measurements, user answers or permission. They add no model call, durable
-evidence event, automatic cache, pool widening, compound mode or Max.
+evidence event, automatic cache, pool widening, compound mode or Autopilot.
 Ordinary Copilot login/discovery/inference is unchanged. See
 [the exact source/digest and qualification contract](architecture/model-evidence.md).
 

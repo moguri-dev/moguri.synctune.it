@@ -4,8 +4,8 @@ The desktop Settings pages keep their on-screen text short. These pages hold the
 behavior, limits and safeguards behind each setting. The [design rules](../design.md) describe how
 Settings presents them; the linked architecture contracts remain authoritative for implementation.
 
-The rail has 7 groups and 28 entries. Integrations and Interface are single rail
-entries whose pages are tabs; see [Settings rail structure](../design.md#settings-rail-structure).
+The rail lists only the 7 pages below. Each page shows all of its sections on one scrolling
+page; see [Settings rail structure](../design.md#settings-rail-structure).
 
 ## General
 
@@ -21,8 +21,6 @@ entries whose pages are tabs; see [Settings rail structure](../design.md#setting
 - [Decision providers](decision-providers.md)
 
 ## Integrations
-
-One rail entry with a tab per integration. Each tab shows its status.
 
 - [GitHub](github-workflows.md) (previously "GitHub workflows")
 - [Linear](linear-workflows.md) (previously "Linear workflows")
@@ -62,8 +60,7 @@ One rail entry with a tab per integration. Each tab shows its status.
 
 ## Interface
 
-One rail entry with a tab per page. Previously four groups (Appearance, Voice,
-Accessibility, Notifications).
+Previously four groups (Appearance, Voice, Accessibility, Notifications).
 
 - [Appearance](appearance.md)
 - [Keyboard shortcuts](keyboard-shortcuts.md)

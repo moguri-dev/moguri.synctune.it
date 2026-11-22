@@ -33,14 +33,17 @@ OpenAI-compatible endpoints (with custom headers), Moguri connects
 [OpenRouter, the Anthropic API, the OpenAI API and a ChatGPT account](architecture/hosted-providers.md).
 
 The TUI uses Enter to send and Shift+Enter for newlines; Cmd/Ctrl+Enter holds
-active-turn prompts or opens scheduling when idle. Its compact chat-first
+active-turn prompts, which start one at a time after each completed turn by
+default, or opens scheduling when idle. Its compact chat-first
 client saves and leaves on `exit`, `/exit` or Ctrl+C while the shared service
 keeps working; `/stop` remains the turn-stop command. The
 layout has a growing input, formatted replies, expandable tool output, clickable
 navigation and a focus-safe sidebar. [Terminal controls](setup.md#terminal-navigation-and-shared-themes)
 preserve drafts while reading history. [Shared themes](architecture/themes-and-tui.md)
-include ten presets in Dark and Light, without changing saved choices or factory
-Dark. Moguri includes its own verified [source setup instructions](setup.md)
+include eleven presets in Dark and Light on a neutral base, without changing
+saved choices or factory Dark. Desktop **Getting started** asks once per
+profile for an optional name (used to greet you and sent to the model), an
+accent, the theme and common behaviors, and restarts from Settings / General. Moguri includes its own verified [source setup instructions](setup.md)
 in normal model context, including project-free chats. Desktop Settings keeps
 on-screen text short; the [Settings reference](settings/README.md) holds
 each page's full behavior and safeguards.
@@ -101,11 +104,16 @@ share the same service and SDK. Transient model failures use current-profile
 The primary button retries the original eligible failure without sending a new
 draft. Idle scheduling offers local-time controls, unsent ghost prompts and an
 Automations / Scheduled prompts group, with one-at-most queue admission.
-[Customize and Artifacts tabs](architecture/skills-tools-artifacts.md) sit next
+[Capabilities and Artifacts tabs](architecture/skills-tools-artifacts.md) sit next
 to Automations: toggle installed skills, install skills from configured
 repositories, browse the agent's toolsets, write or ask the agent for script
-tools for every chat, and find each project's builds, files, images and links
-with their chat. Agents get typed GitHub reads (tags, releases, annotations,
+tools for every chat, and find builds, files, images and links across all
+projects or in one project, with their chat. Capabilities / Skills and Settings /
+Skills list every skill, grouped by personal repository (*Personal - {repo
+name}*), marketplace provider, folder, plugin and project, with a switch per
+skill; marketplace skills stay off until you trust each exact version, and the
+service offers chats only skills that are on
+([D57](architecture/decisions.md#d57-skills-list-per-skill-switches-and-marketplace-trust)). Agents get typed GitHub reads (tags, releases, annotations,
 contents, settings, rules) and reviewed `github_write` (comments, threads,
 releases, settings; draft PRs only).
 An optional recurring check suggests script tools for requests you repeat.
@@ -122,6 +130,10 @@ workflow of prompts and repository-trusted scripts once, every N minutes, daily
 or on chosen weekdays. Each run starts a new chat in its project with captured
 controls; script steps run without a model call under normal approval. Missed
 times run once, overlapping times are skipped, and restarts never replay a step.
+An automation can also have no project: each run then starts an ordinary
+project-free chat (Home for Local runs) with prompt steps only. Inbox reports
+every run's start and outcome, linked to its chat; reading an entry never
+answers or approves anything.
 Desktop, TUI (`/automations`, F9) and CLI (`moguri automations`, YAML/JSON
 workflow files) share the same state.
 
@@ -217,12 +229,16 @@ actual execution-machine observations separate from endpoint availability and
 capacity estimates. Exact offline version execution needs a separate one-use
 user review; it never starts a model or installs weights.
 
-Automatic **Kupo** exposes Balanced, Savings and Performance as routing modes,
-separate from exact shared role-effort and working-window controls. It selects
-only compatible actual roles within
-the selected boundary; Savings/Performance require reviewed evaluation and
-reference-price profiles, never guessed frontier classes. Bounded Cascade and
-Critique retain original role results, and text compaction (on by default,
+Automatic **Kupo** exposes Balanced, Savings, Performance and Dynamic as routing
+modes, separate from exact shared role-effort and working-window controls. It
+selects only compatible actual roles within the selected boundary;
+Savings/Performance class models by a reviewed profile, a provider-declared or
+exact published API price, never a guessed family, and Dynamic picks one of the
+three for each request. Each mode runs its own workflows (D56): Savings Single
+and Cascade, Balanced every enabled workflow, Performance Single, Critique and
+Council. Price-class Cascade, cross-lab Critique and a Council of at least three
+AI labs work with only enabled models and have their own settings; bounded
+Cascade, Critique and Council retain original role results, and text compaction (on by default,
 following the shared smart compaction setting) preserves readable history and
 source provenance. Finite automatic work uses
 complete all-role holds and selected-boundary finishing. The
@@ -273,6 +289,17 @@ Dragging a child out asks before detaching, with a saved opt-out in Settings /
 Confirmations. Unpin has a crossed-out
 pin. Global views live on the left; the right rail contains the session tools
 and per-session **Code change** and **Work item** links.
+Their PR and issue lists, and the project's From PR and From work item dialogs,
+show open items first with GitHub's colored state marks; **Show closed** adds
+closed and merged ones. Code change's **New branch** pushes the session's work
+to a reviewed remote branch that the agent keeps using. The Files view
+highlights code syntax ([D63](architecture/decisions.md#d63-github-item-lists-session-branches-and-highlighted-files)).
+A linked pull request opens as a full view: an editable description with reviewers, assignees and labels, files with an on-demand
+agent **Tour**, review activity, GitHub Actions checks that open their workflow runs, and commits. Its Draft / Ready control works for
+you and for the agent ([D64](architecture/decisions.md#d64-pull-request-view-draft-state-and-guided-tours)).
+Diff lines take inline review comments that post to GitHub and show under Reviews. A session's pull requests stay linked once
+associated; switch between them with the PR tabs, and the sidebar mark is green, grey or purple for all of them together
+([D65](architecture/decisions.md#d65-inline-review-comments-fixed-pr-associations-and-one-session-pr-mark)).
 Click an active right-rail icon again to collapse its pane back to the rail.
 Terminal belongs to a session: project-free consoles start in configured HOME,
 and project consoles keep their bound worktree. There is no global-terminal UI.
@@ -351,8 +378,8 @@ and pinned SSH workers without modifying a source checkout. See
 These context features are implemented. Final native and integrated acceptance
 remain separate in the [current roadmap](remaining-milestone-gaps.md).
 
-Core **Remote SSH** execution uses an explicitly pinned host and approved
-remote workspace. The existing worker runs inference and file/command tools
+Core **Remote SSH** execution (the **Remote host** Env; `/ssh` inspects or
+probes it) uses an explicitly pinned host and approved remote workspace. The existing worker runs inference and file/command tools
 there; the local service still owns approvals and history. Disconnect/restart
 reconciliation retains late accounting without replaying effects or turning
 partial work into success. Files, Git changes and read-only plan views now use
@@ -394,7 +421,7 @@ outcomes without a model or automatic commit. The exact installed SDK and
 actual packaged app are independently qualified;
 [setup](setup.md#current-qualified-0220-alpha1-checkpoint) records their
 immutable identities. Compound model routing,
-finite kupo wind-down and Max still remain unavailable, not implied by the
+finite kupo wind-down and Autopilot still remain unavailable, not implied by the
 private Cascade/Critique transport proofs.
 Qualified **0.23.0-alpha.1 / protocol 31** adds independently retained planned
 budget capacity and one explicitly cost-reviewed, tool-less Local model
@@ -515,14 +542,21 @@ user console, not an agent permission or a claimed sandbox.
 
 The Local **Browser** pane also supports approved agent navigation, inspection,
 clicks and text input. Its top **Agent control** switch starts off and revokes
-access immediately when disabled. It never adopts a personal browser.
-See [browser control](architecture/agent-browser.md).
+access immediately when disabled. Once turned on it stays on for that chat,
+across panel and chat switches, window reloads and app restarts, until you turn
+it off; each reconnect or your own navigation gives the agent a new identity,
+and the pane keeps working hidden while you look at another panel (D61). It
+never adopts a personal browser.
+See [browser control](architecture/agent-browser.md). While the optional
+Stainless integration is on, agent browser automation through the `playwright`
+tool runs in Stainless instead of Chromium, or stops before launching when
+Stainless is not ready ([Stainless](architecture/stainless.md)).
 
 Attachments stay compact in the composer/chat. Clicking an image opens the
 large, uncropped viewer without changing captured context.
 
 Project-free sessions can open private HOME consoles without granting model
-workspace access. Project-free Autopilot cannot invent workspace access, and side
+workspace access. Project-free Autonomous cannot invent workspace access, and side
 chats expose an explicit concrete-model selector when needed.
 User consoles retain authenticated per-profile/peer owners across
 explicit service restart or controller loss. Ghostty and shared SDK/CLI/TUI
@@ -626,10 +660,12 @@ with the same name, and Moguri asks you to rename such skills.
 [**Kupo**](architecture/automatic-kupo.md) is always in the model picker.
 Its automatic policy uses configured models: none blocks inference, one runs
 directly in Single, and multiple models support task-based Single, gated
-Cascade or eligible read-only Critique with one revision. Declared capability
+Cascade, read-only Critique by a model from a different AI lab, or a Council of
+models from at least three labs, each with bounded revisions. Declared capability
 categories guide routing, including pools of three through twenty models.
 Only the selected response reaches normal approvals; every actual role is
-metered. Independent critique still needs reviewed lineage evidence. Finite
+metered. AI labs come from model names, not proof of independent training
+(D56); mode-less legacy selections still need reviewed lineage for Critique. Finite
 automatic budgets, images, synthetic tuning and Sandbox routing remain
 unavailable without fallback. Existing explicit
 [Single policies](architecture/routing.md) remain supported separately.
@@ -646,7 +682,7 @@ policy claims, not proof of independent training or calibrated quality.
 Finite Local routing now reserves one actual metadata-only finishing role and
 has separately reviewed actual-user accepted-work checkpoint branches that
 preserve the source index/HEAD. A summary never accepts code or approves Git.
-[Local **Autopilot Max**](architecture/owned-decisions.md) now uses an
+[Local **Autopilot**](architecture/owned-decisions.md) now uses an
 explicitly configured bounded-model System One-compatible alternative with
 fixed or Single-routed solvers. Exact existing tool delegation, user-declared
 technical choices and bounded safe-boundary steering share the real model
@@ -658,11 +694,12 @@ No generative substitution or calibrated reliability is claimed.
 The current generated source, packed SDK and exact native image pass the
 [full acceptance sweep](setup.md#final-protocol-40-source-acceptance).
 Live-provider/calibrated-quality gates, complete remote/native
-side-panel/extension transport, Remote/native compound/Max and
+side-panel/extension transport, Remote/native compound/Autopilot and
 remote/native wind-down remain incomplete.
 Unknown usage and Copilot billing are not presented as zero cost.
-Manual remains the default. Guided still needs human confirmation; Autopilot
-can use only explicit bounded user grants. SendBox has a visible fail-closed
+Manual remains the default. Guided still needs human confirmation; Autonomous
+can use only explicit bounded user grants. Autonomy levels read Manual, Guided,
+Autonomous and Autopilot over unchanged stored values (D60). SendBox has a visible fail-closed
 configuration/readiness surface. The development SDK/client lifecycle
 now passes actual native generated-provider checks, but readiness still needs
 explicit reviewed release/image/network pins and private staging. Endpoint-only
@@ -710,7 +747,8 @@ repository is public, packaged apps update automatically, and installs still
 wait for your confirmation. An optional read-only token covers the private
 period and GitHub's rate limit; see [GitHub updates](settings/general.md#github-updates).
 
-Settings has a shorter rail: 7 groups and 28 entries, down from 11 groups and
-37. Integrations and Interface are each one rail entry with keyboard-navigable
-tabs, and each integration tab shows its status. See
+Settings has one rail entry per page: General, Models, Integrations, Execution
+& permissions, Sessions, Instructions and Interface. Each page shows all of its
+sections on one scrolling page instead of separate entries or tabs; search
+narrows the rail to the pages with a match. See
 [Settings rail structure](design.md#settings-rail-structure).

@@ -95,7 +95,7 @@ export const screenshots = [
     name: "autonomy",
     capture: "after-composer-popover-1280.png",
     title: "Autonomy levels",
-    alt: "The composer's Autonomy menu in Moguri with Manual selected, plus Guided, Autopilot and a disabled Autopilot Max option. A note says hard deny rules, read-only mode, environment policy and budgets still apply.",
+    alt: "The composer's Autonomy menu in Moguri with Manual selected, plus Guided, Autonomous and a disabled Autopilot option. A note says Autonomous and Autopilot are unattended, and hard deny rules, read-only mode, environment policy and budgets still apply.",
   },
   {
     name: "code-change",
@@ -107,7 +107,7 @@ export const screenshots = [
     name: "settings",
     capture: "after-settings-1280.png",
     title: "Settings",
-    alt: "Moguri Settings with the simplified rail: General, Models, Integrations, Execution and permissions groups on the left, and the Interface page open with Appearance, Keyboard shortcuts, Voice dictation and Notifications tabs.",
+    alt: "Moguri Settings with a search box and the General, Models, Integrations, Boundaries, Sessions, Instructions and Interface groups on the left, and the Interface page open with Appearance, Keyboard shortcuts, Voice dictation and Notifications sections.",
   },
   {
     name: "analytics",

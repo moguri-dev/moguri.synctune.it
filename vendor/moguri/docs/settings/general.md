@@ -3,6 +3,18 @@
 Technical reference for **Settings / General**. The app shows a short summary;
 this page keeps the full detail.
 
+## You
+
+- **Your name** is optional and absent by default (at most 80 characters, no control characters or angle
+  brackets). Moguri greets you with it and adds it to every chat's system prompt in a `<user-name>` block,
+  so the model provider receives it. It is a courtesy preference, never identity proof or permission. It is a
+  written value: edit it, then **Save your name**. Clearing it and saving removes it.
+- **Restart Getting started** reopens the first-run setup in the main pane with your current choices
+  selected; it resets nothing. It is unavailable while Settings has unsaved edits.
+- Getting started opens by itself once per profile, until **Finish** or **Skip setup** records
+  `onboarding.completedAt`. Hidden test windows skip it unless `MOGURI_TEST_ONBOARDING=1`. See D54 in
+  [decisions](../architecture/decisions.md).
+
 ## Application
 
 - Application preferences belong to the encrypted store as a whole (not to one profile) and apply across

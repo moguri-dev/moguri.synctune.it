@@ -6,16 +6,17 @@ this page keeps the full detail.
 ## Remote SSH (page help)
 
 Run the agent, its file and command tools and inference on an explicitly approved SSH host. The local
-service keeps authority and history. SSH is not SendBox isolation.
+service keeps authority and history. SSH is not SendBox isolation. The Env menu calls this mode
+**Remote host** (stored value `Remote`), and `/ssh` inspects or probes the target (D60).
 
 Set each project's canonical `remotePath` in Project settings. A localhost model endpoint belongs to the
 SSH host, not this Mac. Declare remote endpoints in `models` with the same explicit limits as Local
 models.
 
-Review Remote MCP resources and separate access-forwarding grants under MCP gateway. Selecting Remote
+Review Remote MCP resources and separate access-forwarding grants under MCP gateway. Selecting Remote host
 never grants MCP access. Explicit user consoles use their own captured SSH owner and root, not a Local
 shell or SendBox isolation. Repository-memory retrieval and transferred Local scripts remain
-unavailable on Remote.
+unavailable on Remote host.
 
 ## Warning
 
@@ -27,7 +28,7 @@ or your secret store.
 ## Remote endpoint credentials
 
 Keys bind to the verified SSH identity and exact model URL. A host-local key is never silently reused
-on Remote. Stored keys go to the explicit secret backend.
+on Remote host. Stored keys go to the explicit secret backend.
 
 ## Remote runs (previously "Owned execution recovery")
 

@@ -34,6 +34,13 @@ this page keeps the full detail.
 - Fix broken CI also needs "My signed-in GitHub CLI account" under GitHub read access.
 - Contract: `docs/architecture/pr-automation.md`.
 
+## Tour prompt for this repository
+
+- **Override the tour prompt** copies the current global prompt into this repository and saves immediately;
+  edit the text and press **Save**. Clearing the checkbox, or saving a blank prompt, inherits the global prompt
+  from **Settings / Integrations / GitHub / PR tour** again.
+- Contract: `docs/architecture/pr-tours.md`.
+
 ## Screenshots of UI changes / Installer when session work is done
 
 - **Screenshots of UI changes** (default: take them as the UI changes) tells the agent to capture affected screens

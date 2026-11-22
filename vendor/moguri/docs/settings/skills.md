@@ -8,9 +8,57 @@ On/Off switches, a **Marketplace** that installs a skill from these sources
 into one project or every project, and the agent's toolsets. Contract:
 [skills, tools and artifacts](../architecture/skills-tools-artifacts.md).
 
+## All skills (protocol 117, D57)
+
+Capabilities / Skills and the top of Settings / Skills show one list of every
+skill the profile knows. Each group is collapsible: they start expanded on the
+Capabilities page and collapsed in Settings, which reads skill sources only once
+you open a source group (or click **Read sources again**).
+
+| Group | What it holds | Default |
+| --- | --- | --- |
+| **Personal - {repo name}** | Skills in a GitHub repository you added as **Your GitHub repository** | On |
+| The provider name you gave a marketplace source | Skills in any other GitHub repository or HTTPS ZIP | Off until you click **Trust** |
+| The folder's name (for example *Global agent skills*) | Skills in a local folder, including `~/.agents/skills` and `~/.moguri/skills` | On |
+| **Plugin - {name@version}** | Skills bundled by a plugin | As installed (off) |
+| **All projects**, **Project - {name}** | Skills you imported or approved, and copies installed before protocol 117 | As saved |
+
+A copy installed from a source (Marketplace **Install**) is listed in that
+source's group, marked with the project it was installed in.
+
+- Every skill has its own switch, which saves immediately. Installed, imported,
+  approved and bundled skills use their existing On/Off state.
+- **Trust** (marketplace skills only) re-reads the source and records the
+  exact SKILL.md and complete package (every file in its folder), that you
+  trusted it and when. It turns the skill on for every chat in the profile.
+  Trusting is not a permission: it grants no tools and approves nothing; calls
+  still follow your approvals and policy.
+- If the marketplace changes a trusted skill, it shows **Changed** and chats
+  can't load it until you trust the new version.
+- Chats are offered, and `/skill`, the slash menu and the agent's `use_skill`
+  can load, only skills that are on. The service enforces this. Turning a skill
+  off blocks later loads and effects in chats that already loaded it; it can't
+  recall instructions a model already read.
+- Each remote source row has a **Who publishes** choice (Marketplace or Your
+  repository) that saves immediately. Changing it, like disabling the source,
+  ends the current trust period of its skills.
+- A settings write, a JSON edit or an applied configuration proposal can't add
+  or change a trust record; only **Trust** can.
+- Existing state: remote sources saved before protocol 117 are marketplaces.
+  Their skills were never loadable without a signed per-chat admission, so
+  nothing that was active is turned off, and a chat that already admitted one
+  keeps it. Local folder skills stay on and registry skills keep their switches.
+- TUI: `/skills list`, `/skills on|off SOURCE_ID PATH`,
+  `/skills trust SOURCE_ID PATH SHA PACKAGE_SHA`. CLI: `moguri skills list`,
+  `moguri skills on|off SOURCE_ID PATH`, `moguri skills trust SOURCE_ID PATH
+  --digest SHA --package-digest SHA --confirm-review`.
+- Decision: [D57](../architecture/decisions.md#d57-skills-list-per-skill-switches-and-marketplace-trust).
+
 ## Skill gateway
 
-- Sources can be a local skill folder, a public GitHub repository or a direct HTTPS ZIP archive.
+- Sources can be a local skill folder, a public GitHub repository or a direct HTTPS ZIP archive. When you add a
+  GitHub repository, choose **Your GitHub repository** (its skills start on) or **Marketplace** (each skill
+  stays off until you trust it); see [All skills](#all-skills-protocol-117-d57).
 - Each search and each read refreshes and validates the source; a lookup error returns no stale result.
 - No scripts run, no skills are silently installed, and skill text cannot grant permissions.
 - Sources belong only to the current profile and are read on the Local control plane, also for Remote sessions.
@@ -48,7 +96,7 @@ into one project or every project, and the agent's toolsets. Contract:
 - Excluded protected paths cannot be dependencies of the skill.
 - External references in the skill are not fetched, inspected or authorized.
 - Allowed paths are literal paths. Write access ("Read and write files") is offered only when the skill declares native-file access, and stays under current hard policy.
-- Signed publishers: verify against the documented `moguri-skill-artifact-v1` signature payload with a separately user-pinned Ed25519 key. Pinning proves control of this reviewed key, not an independently verified real-world organization. HTTPS archives require a pinned signature.
+- Signed publishers: verify against the documented `moguri-skill-artifact-v1` signature payload with a separately user-pinned Ed25519 key. Pinning proves control of this reviewed key, not an independently verified real-world organization. Per-chat admission of an HTTPS archive skill requires a pinned signature; the other way to use a marketplace skill is **Trust** in All skills (D57), which applies to every chat and grants no tools. A skill must be on (trusted, for a marketplace) before a chat can review it here.
 - Unverified publishers record an actual-user Local review acknowledgement.
 - Saved publisher keys: when the profile has saved keys, **Publisher key** offers them instead of pasting a key.
 - Indicator findings: the review lists pattern matches (hidden characters, download-and-run, credential paths,
@@ -81,7 +129,7 @@ changes.
 
 ## Delete confirmation
 
-Chats that admitted the skill lose access. Its version history stays in this profile's encrypted event
+Delete is in All skills, on installed and imported skills (not plugin-bundled ones). Chats that admitted the skill lose access. Its version history stays in this profile's encrypted event
 history.
 
 ## Publisher keys

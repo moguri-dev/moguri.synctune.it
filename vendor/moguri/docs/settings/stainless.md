@@ -11,7 +11,12 @@ for previews and agent browser automation. Off by default.
 ## Use Stainless
 
 Saves immediately. While off, status, check, Open in Stainless and agent
-batches never launch or open anything.
+batches never launch or open anything. While on, every agent browser
+automation (the `playwright` tool) runs in a new headless Stainless with a
+throwaway profile instead of another Chromium, even when the agent named a
+different browser. If Stainless is not ready (missing, untested or failed its
+check), those batches stop before launching anything rather than using another
+browser. The Browser panel itself stays Moguri's in-app preview.
 
 ## Stainless app location
 

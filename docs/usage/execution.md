@@ -8,14 +8,14 @@ Env chooses where work runs. Autonomy controls tool approval behavior. Read-only
 | --- | --- |
 | Manual | Covered native operations use policy. Shell commands and external MCP calls ask unless a matching remembered grant exists. |
 | Guided | The model can recommend a choice, but you make the actual answer or approval. |
-| Autopilot | Explicitly opting in enables automatic declared tool and command approvals for subsequent work. Hard restrictions still apply. |
-| Autopilot Max | Adds the configured, qualified bounded decision layer. Local readiness is required; dedicated Jev and Remote/native Max remain unqualified. |
+| Autonomous | Explicitly opting in enables automatic declared tool and command approvals for subsequent work. Hard restrictions still apply. |
+| Autopilot | Adds the configured, qualified bounded decision layer. Local readiness is required; dedicated Jev and Remote/native Autopilot remain unqualified. |
 
-Selecting a model or opening a session does not opt you into more autonomy. Older bounded Autopilot choices require explicit reselection to adopt automatic approvals.
+Selecting a model or opening a session does not opt you into more autonomy. Older Autopilot choices, now shown as Autonomous, require explicit reselection to adopt automatic approvals.
 
 Factory Manual and Guided policy permits covered native file reads, searches, data queries, and edits without a permission card. Explicit stricter ask or deny rules still win.
 
-`/yolo` is an explicit session-only delegation action. It chooses qualified Max when ready, otherwise Autopilot. It does not change model, Env, budget, read-only mode, or hard policy. A held `/yolo` remains held.
+`/yolo` is an explicit session-only delegation action. It chooses qualified Autopilot when ready, otherwise Autonomous. It does not change model, Env, budget, read-only mode, or hard policy. A held `/yolo` remains held.
 
 ## Use read-only mode
 

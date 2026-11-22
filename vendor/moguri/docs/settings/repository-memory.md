@@ -17,7 +17,7 @@ Retrieved snippets are bounded in size.
 
 ## Index scope
 
-Source capture and freshness checks follow the selected session's Env root (Local, Sandbox or Remote).
+Source capture and freshness checks follow the selected session's Env root (Local, Sandbox or Remote host).
 Without a session, project actions are explicitly Local. The derived text/vector cache stays on the
 control plane; selected snippets may enter the chosen model's context. Protected and ignored paths are
 excluded. Save before indexing; opening this page never scans or probes a host.
