@@ -8,13 +8,19 @@ this page keeps the full detail.
 Previously "Review model evaluations and reference prices". Contracts: `docs/architecture/automatic-kupo.md`,
 `docs/architecture/routing.md`, `docs/architecture/model-evidence.md`.
 
-- Balanced can use declared capabilities. Savings and Performance need a current exact-model source
-  review, including frontier or economy classification and API-equivalent reference prices. Unknown is
-  never treated as frontier, cheap, free or independent.
+- Balanced can use declared capabilities. Savings and Performance class each model by a current
+  profile from this section, else as economy when it is an execution-host loopback model, else by the
+  output price its pay-per-use provider declares (such as OpenRouter, D56), else by its exact published
+  output API price in Moguri's price table (bundled or refreshed under Budgets): up to $5 per million
+  tokens is economy, $20 or more is frontier and anything between is standard. An unpriced model without
+  a profile stays unclassed and runs only in Balanced (and Dynamic's Balanced rules). Price is a class
+  signal, not quality. Unknown is never treated as frontier, cheap, free or independent (D55).
+- Profiles are optional. A profile overrides the price class, and a pair of profiles with comparable
+  scores is also a valid Cascade pair; Cascade and Critique no longer require them (D56).
 - Scores are source-reviewed normalized observations, not Moguri quality guarantees. Comparable Cascade
-  models need the same evaluation-set SHA-256. Critique also needs a reviewed independent lineage pair and
-  a matching user-defined cost class. Evidence expires within 30 days of observation. No benchmark or
-  metadata request runs here.
+  models need the same evaluation-set SHA-256. A reviewed lineage Critique pair also needs a matching
+  user-defined cost class. Evidence expires within 30 days of observation. No benchmark or metadata
+  request runs here.
 - The review shows the source SHA-256, evaluation set and cost class.
 - Reference prices are reference only: not billed cost or a rate-policy change. For local models with
   basis `local-no-api-fee`, having no hosted API fee does not erase token usage, configured rates or
@@ -54,7 +60,36 @@ worktree Cascade / Critique" is now "Cascade / Critique in a worktree". Values (
 
 Kupo uses your configured models automatically. No eligible model means no inference. One eligible
 model always runs directly in Single (without a classifier). With multiple models, Kupo chooses Single,
-gated Cascade or an eligible independent Critique with at most one revision.
+gated Cascade, cross-lab Critique or Council for each request, as the preference and workflow settings
+allow. Contract: `docs/architecture/automatic-kupo.md` (D56).
+
+## Kupo workflows
+
+Every workflow is on by default (`kupo.workflows` absent). Each has its own settings:
+
+- **Cascade** (`cascade.enabled`, `cascade.classes`): a model in a cheaper class drafts and a model in a
+  strictly pricier class (economy, then standard, then frontier) escalates when the gate asks. A model's
+  Cascade class is its reviewed profile, else your override in `classes`, else its ordinary class.
+  `excluded` removes a model from Cascade entirely.
+- **Critique** (`critique.enabled`, `critique.labPairs`): a critic from a different AI lab reviews the
+  draft and the drafter revises within the revision bound. Labs come from the model ID, API ID, display
+  name or direct provider; each pair is unordered. An empty list allows any two different known labs.
+  Lab labels are name-based, not proof of independent training. Reviewed lineage pairs stay valid.
+- **Council** (`council.enabled`, `council.labs`, `council.size` from 3 to 5): one drafter and
+  `size - 1` reviewers, each from a different known lab, review the same draft. All passing selects it,
+  a majority rejecting stops it, and anything else returns every critique to the drafter for one
+  revision the whole council reviews again. An empty `labs` list allows any known lab; local models
+  without a recognizable name count as one lab.
+- Single is always available. Lab pairs need two different known labs without duplicates, and Council
+  labs must be known; invalid settings are refused when saved.
+
+Each preference uses a subset: Savings runs Single and Cascade; Balanced runs every enabled workflow and
+avoids frontier solvers and drafters for requests above 32,768 estimated input tokens while a
+non-frontier model is eligible; Performance runs Single, Critique and Council at High or xhigh; Dynamic
+picks per request. Every mode picks thinking effort per request by task complexity, capped at xhigh: Kupo
+never chooses Max, which tends to degrade results. The composer's mode list
+(`routing.modes`) shows which workflows each mode can run with the current models, with eligible pairs
+and Council models.
 
 ## Configured model pool
 
@@ -83,10 +118,10 @@ exact compactor, trigger fraction, recent turns, output bound and per-turn call 
 
 ## Automatic mode warning
 
-Only a selected original response reaches ordinary permissions. New modes require comparable reviewed
-Cascade evidence (models evaluated on the same evaluation set) or an independent same-cost-class
-Critique pair. Missing System One/Max transports remain blocked. Sandbox needs fresh exact native-byte
-qualification; there is no Local fallback.
+Only a selected original response reaches ordinary permissions. New modes run Cascade with a strictly
+cheaper draft class, Critique with a critic from a different AI lab and Council with one model per lab;
+lab labels are name-based, not proof of independent training. Missing System One/Autopilot transports remain
+blocked. Sandbox needs fresh exact native-byte qualification; there is no Local fallback.
 
 ## Compound routing policy
 
@@ -104,7 +139,7 @@ strings. Up to four routes and eight approved role models.
 Public Compound requires exact selected-Env source and stages and a separate actual-user staging/test
 review. Local and pinned SSH use their original roots; native-private (Sandbox) work remains physically
 unqualified until fresh exact-runtime evidence passes. Finite budgets need the selected-boundary reserved
-finishing (wind-down) policy. Max needs an explicit compatible Decision provider and cannot bypass
+finishing (wind-down) policy. Autopilot needs an explicit compatible Decision provider and cannot bypass
 reviews or hard policy. No fallback.
 
 ## Single policy

@@ -60,6 +60,18 @@ this page keeps the full detail.
   settings**.
 - Neither flag grants merge, force-push, rebase or sign-in. See [pull request automation](../architecture/pr-automation.md).
 
+## PR tour
+
+- **Tour prompt** is the instruction the chat's agent follows when you choose **Generate tour** in a pull
+  request's **Files / Tour** view. It starts with Moguri's default prompt. Edit it and press **Save**; **Reset to
+  default** removes your prompt. A blank prompt also uses the default.
+- Moguri adds the pull request URL, its exact head SHA and the tour's JSON format after your prompt. Those parts
+  can't be edited, so a custom prompt can't change which PR or head is read or how the tour is shown.
+- A repository can use its own prompt in **Settings / Project**; **Repository prompts** lists those repositories
+  with **Open settings**.
+- The tour runs as a read-only turn with the chat's model, Env, budget and approvals. See
+  [pull request tours](../architecture/pr-tours.md).
+
 ## Branch names
 
 - **Branch name prefix** (optional, profile-wide) is added in front of every branch name Moguri generates:

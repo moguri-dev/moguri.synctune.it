@@ -87,8 +87,8 @@ consumption outside the checkout are executable acceptance checks.
 Local/core qualified SSH execution, fixed Copilot/configured local models and
 Unlimited or explicit estimated budgets are operational. Remote side-panel/executable-extension
 transports remain explicitly unavailable.
-Manual is default; Guided still needs a human and Autopilot uses only explicit
-user grants. Autopilot Max and unqualified environments remain unavailable.
+Manual is default; Guided still needs a human and Autonomous uses only explicit
+user grants. Autopilot and unqualified environments remain unavailable.
 
 The agent loop runs in a separate Node process. It receives short-lived
 per-request model access through a private IPC channel, never the control-plane

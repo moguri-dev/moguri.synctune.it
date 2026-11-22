@@ -44,6 +44,7 @@ relicensing it.
 | `@earendil-works/pi-ai` | MIT | GitHub Copilot, OpenRouter, Anthropic API, OpenAI API and Sign in with ChatGPT authentication, catalogues and model transport |
 | OpenTUI core and React renderer | MIT | Native terminal rendering |
 | React and React DOM | MIT | Shared state hooks and desktop UI |
+| Lucide (`lucide-react` 1.77.0) | ISC | Desktop interface icons |
 | Electron | MIT plus Chromium/Node notices | Isolated desktop shell |
 | TypeBox | MIT | Public command and private worker validation |
 | `ws` | MIT | Authenticated local event transport |
@@ -51,6 +52,8 @@ relicensing it.
 | `ghostty-web` 0.4.0 and its Ghostty WASM core | MIT | Maintained embedded desktop terminal, VT parsing and canvas rendering; self-hosted WASM, not a custom terminal emulator |
 | `@napi-rs/keyring` | MIT | Explicit OS credential backend |
 | `react-markdown`, `remark-gfm` | MIT | Safe Markdown presentation |
+| `lowlight` 3.3.0 with `highlight.js` 11.11 | MIT; BSD-3-Clause | Read-only syntax highlighting in the Files view |
+| `hast-util-to-jsx-runtime` 2.3.6 | MIT | Turns highlighted syntax trees into React elements without HTML strings |
 | Vite, esbuild, tsx | MIT | Builds and development/test TypeScript execution |
 | TypeScript | Apache-2.0 | Static verification |
 | Playwright | Apache-2.0 | Hidden Electron end-to-end testing |
@@ -75,6 +78,8 @@ relicensing it.
 | Cargo / Rust tooling | MIT OR Apache-2.0, plus included notices | Explicit native locked registry-cache preparation, not host build-script execution |
 | Go tooling | BSD-3-Clause, plus included notices | Native locked module checksum/cache verification; no implicit toolchain download |
 | LobeHub Icons (`@lobehub/icons-static-svg` 1.102.0) | MIT | Monochrome provider marks (GitHub Copilot, OpenRouter, Anthropic, OpenAI, Claude Code, Codex) on Settings / Model providers. Path data is copied into `apps/desktop/src/ProviderLogo.tsx` with its license notice; no package dependency is added. The marks are their owners' trademarks, used only to identify each service. |
+| Simple Icons 16.38.0 | CC0-1.0 | Monochrome GitHub, Linear and Model Context Protocol marks on Settings / Integrations. Path data is copied into `apps/desktop/src/IntegrationLogo.tsx`; no package dependency is added. The marks are their owners' trademarks, used only to identify each service. |
+| Stainless app icon (`mbianchidev/stainless`, `chromium/branding/stainless-icon.png`) | Apache-2.0 | Resized to 64 px as `assets/integrations/stainless.png` for Settings / Integrations / Stainless. Moguri still never bundles or redistributes the Stainless browser itself. |
 | Sharp 0.35.5 | Apache-2.0, with bundled libvips LGPL-2.1-or-later notices | Bounded local image validation/normalization for explicit attachments; no remote conversion or real-image test fixtures |
 
 The managed cache's advisory source is the public OSV batch API. Its use

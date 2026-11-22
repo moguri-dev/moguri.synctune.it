@@ -19,7 +19,15 @@ this page keeps the full detail.
 - Models whose upstream IDs match exactly share one row. When several providers offer that ID, choose one
   provider as the source. A saved source never changes silently when it becomes unavailable; the row shows
   "Saved source unavailable" instead.
-- Provider declarations about a model are not proof of model family, independence or quality.
+- The list groups models by the provider that serves them (the chosen source, else the first available
+  offering), then by AI lab when a provider offers models from several labs. Every group starts collapsed;
+  searching or filtering opens the groups that match. **Order by price** lists free models first (local
+  models and providers that declare a zero price), then priced models from the cheapest output price, then
+  models without a known price. **Providers** and **AI labs** filters narrow the list. Prices come from the
+  provider's own catalogue for pay-per-use providers (OpenRouter, Anthropic API, OpenAI API) or Moguri's
+  published API-equivalent table; they are not your bill. The same grouped list is used by Kupo's model
+  pool, Cascade classes and the legacy approved-solver list (D59).
+- Provider declarations and AI lab labels are not proof of model family, independence or quality.
 - With no models, nothing is guessed: sign in to a provider or configure one.
 - If a change is not acknowledged by the service, inspect the saved state before retrying.
 

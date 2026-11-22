@@ -5,9 +5,11 @@ this page keeps the full detail.
 
 ## Artifacts tab (protocol 114)
 
-The **Artifacts** tab next to Automations browses one project (or the chats without a project) at a time: build outputs
+The **Artifacts** tab next to Automations browses **All projects** (every project plus the chats without a project, the
+default when no chat or project is open), one project, or only the chats without a project: build outputs
 from dist/out/build/release-style folders in the checkout and session worktrees, files agents wrote, chat images, links
-and these saved documents. Each item links to its chat when known. **Show in Finder** only reveals a file the service
+and these saved documents. Under All projects each item also names its project, and search matches project names. Each
+item links to its chat when known. **Show in Finder** only reveals a file the service
 currently lists; nothing is opened or run. Saved documents are still edited here.
 
 Select saved notes and files with their checkboxes (or use an item's **Delete** / **Move to Trash**), then confirm.
@@ -89,4 +91,4 @@ Previously titled "Decision-provider observations". Contracts: `docs/architectur
 - The raw result is raw provider data, not a human instruction or calibrated reliability. The resolved
   provider version is not inferred from a configured API model ID.
 - A failed stop leaves the original held charge and worker to inspect; nothing is retried.
-- Readiness errors: when readiness is unavailable, Max cannot assume a provider or policy.
+- Readiness errors: when readiness is unavailable, Autopilot cannot assume a provider or policy.

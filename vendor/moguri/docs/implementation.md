@@ -200,7 +200,7 @@ It is built from zero: Moguri owns its domain model, event store, protocol, loca
 > metered current solver response. It retains model provenance and still waits
 > for the actual user, who may choose differently. Tool advice binds the current
 > step rather than older narration. This does not enable System One/Jev,
-> Autopilot Max, automated steering or a hidden extra model call.
+> Autopilot, automated steering or a hidden extra model call.
 
 > [Experimental kupo Single](architecture/routing.md) now uses one explicitly
 > approved scoped pool and the existing owned worker, approvals and all-role
@@ -238,15 +238,15 @@ It is built from zero: Moguri owns its domain model, event store, protocol, loca
 > Development [owned role contracts](architecture/owned-role-contracts.md) add
 > exact response checks and selected prior-result context to that same worker;
 > public compound admission, conditional pattern
-> policy, finite kupo and Max remain unqualified.
+> policy, finite kupo and Autopilot remain unqualified.
 
 > Issue-17 development source now adds shared model windows/scoped paste,
 > reviewed native SendBox execution/publication, Local Cascade/Critique,
 > finite Local wind-down and [owned bounded decisions](architecture/owned-decisions.md).
-> Local Max uses an explicitly configured compatible alternative with fixed
+> Local Autopilot uses an explicitly configured compatible alternative with fixed
 > or Single-routed solvers; actual user delegation/acceptance remains final.
 > The final generated source/native and packed-consumer sweep passes.
-> Jev's missing output bound, Remote/native compound/Max/wind-down and live
+> Jev's missing output bound, Remote/native compound/Autopilot/wind-down and live
 > quality remain explicit gates. Historical qualified archives and their
 > protocol versions are unchanged.
 
@@ -475,9 +475,9 @@ Keep the prompt and attached context together, with session controls in this ord
 
 | Control | Choices | Factory starting value |
 | --- | --- | --- |
-| **Env** (Execution environment) | Local, Sandbox via SendBox, Remote via SSH | Local |
+| **Env** (Execution environment) | Local, Sandbox via SendBox, Remote host via SSH (stored as `Remote`) | Local |
 | **Model** | kupo, configured local models, authenticated provider models grouped by provider | Unset; unavailable until at least one generative provider login/API key or local model is configured |
-| **Autonomy level** | Manual, Guided, Autopilot, Autopilot Max | Manual |
+| **Autonomy level** | Manual, Guided, Autonomous, Autopilot | Manual |
 | **Budget** | Unlimited, token cap, USD cap, or both when supported | Unlimited |
 
 The Model control always lists **Kupo**, with setup guidance and an unavailable
@@ -623,12 +623,12 @@ The first release includes built-in Local, [SendBox](https://github.com/mbianchi
 | --- | --- |
 | **Local** | The agent worker and its tools run directly on the user's local machine. This is the out-of-box default, not a promise of isolation or unrestricted approvals. |
 | **Sandbox** | The agent worker and its executable tools run in a local SendBox Linux VM with explicitly scoped workspace mounts, network destinations, credentials, and MCP access. |
-| **Remote** | The agent task, tool execution, and model calls run on a reachable, user-configured SSH machine. It separates execution from the local machine, but does not itself apply SendBox containment on the remote host. |
+| **Remote host** | The agent task, tool execution, and model calls run on a reachable, user-configured SSH machine. It separates execution from the local machine, but does not itself apply SendBox containment on the remote host. |
 
 The local control plane remains the authoritative event writer in all three envs. Env selection does not disable Git approvals, budgets, or other Moguri policies. See [D10](architecture/decisions.md#d10-native-sendbox-execution-and-global-enforcement) and [D13](architecture/decisions.md#d13-remote-ssh-execution) for the backend boundaries.
 
 - Resolve Env defaults using the composer precedence. A saved choice is not an available backend until its prerequisites are ready.
-- Global user-only **allowed envs** policy initially permits all three envs, subject to readiness. It can restrict new execution to Sandbox or Remote. Remote satisfies that policy without requiring SendBox on the target; display its actual SSH-host boundary rather than a SendBox badge. A stricter Sandbox-only policy remains possible. Agents, autonomy levels, and repo/project defaults cannot widen the allowed set.
+- Global user-only **allowed envs** policy initially permits all three envs, subject to readiness. It can restrict new execution to Sandbox or Remote host. Remote host satisfies that policy without requiring SendBox on the target; display its actual SSH-host boundary rather than a SendBox badge. A stricter Sandbox-only policy remains possible. Agents, autonomy levels, and repo/project defaults cannot widen the allowed set.
 - Excluding Local blocks new Local turns, including queued messages, new child-agent turns, and recovery after a restart. Turns already running at the policy-change boundary may finish under their recorded prior policy. Persist that boundary atomically with turn admission, and show these turns as **Local finishing**, not sandboxed. Changing a default alone does not move a running turn between backends.
 - SendBox execution starts only after runtime, workload image, guest artifacts, policy, credentials, and workspace checks succeed. Missing or unsupported capabilities produce actionable diagnostics; never retry on the host or issue model requests while sandbox readiness is unconfirmed.
 - The macOS app distributes a compatible pinned worker image with Linux Node/native dependencies and a reviewed versioned SendBox installer. Managed setup prepares private project/worktree or root-less workspaces automatically; per-turn text previews are not a prerequisite. Resolve only actual admitted provider endpoints and their bounded public DNS aliases under the explicit managed policy. The default GitHub grant delegates Meta domains and shared-cloud CIDRs, fetched into one SendBox host cache and seeded into each guest (guests never contact GitHub Meta), explicitly disclosed before setup approval; do not claim exact-host-only network access. That delegation does not grant provider substitution, private destinations, tool permission or source writes. Automatic/manual public-release checks never activate an unreviewed version or overwrite an active installation.
@@ -647,17 +647,17 @@ Model selection (**fixed model** or **kupo**), **Env**, **Autonomy level**, and 
 | --- | --- |
 | **Manual** | The user answers agent questions and approves tool/action requests. This is the out-of-box default; only explicitly preapproved operations may proceed without a prompt. |
 | **Guided** | The current generative model recommends an answer or approval with an explanation; the user still confirms. In kupo, this is the active solver model, not the hidden router or critic. |
-| **Autopilot** | Explicit selection delegates automatic approval of all declared, qualified tools and commands for subsequent session turns. The solver still asks for genuinely missing user-only facts rather than fabricating answers. |
-| **Autopilot Max** | The same automatic tool approvals, plus a configured qualified System One-compatible decision provider for explicitly delegated technical choices and bounded steering. It also works with a fixed solver and does not require kupo. |
+| **Autonomous** | Explicit selection delegates automatic approval of all declared, qualified tools and commands for subsequent session turns. The solver still asks for genuinely missing user-only facts rather than fabricating answers. |
+| **Autopilot** | The same automatic tool approvals, plus a configured qualified System One-compatible decision provider for explicitly delegated technical choices and bounded steering. It also works with a fixed solver and does not require kupo. |
 
-Use the shared global/profile/repo/project/session defaults. Selecting an Autopilot mode explicitly delegates tool approvals, not additional capabilities, authentication, roots or budget. Hard denials, read-only mode, user-only settings, secret boundaries, Git policies and allowed-env policy remain authoritative. Protocol 61 records explicit `automaticApprovals` consent. Saved Autopilot/Max defaults and unmarked older sessions count as automatic (owner decision); only an explicit `automaticApprovals: false` keeps the bounded legacy path.
+Use the shared global/profile/repo/project/session defaults. Selecting Autonomous or Autopilot explicitly delegates tool approvals, not additional capabilities, authentication, roots or budget. Hard denials, read-only mode, user-only settings, secret boundaries, Git policies and allowed-env policy remain authoritative. Protocol 61 records explicit `automaticApprovals` consent. Saved Autonomous/Autopilot defaults and unmarked older sessions count as automatic (owner decision); only an explicit `automaticApprovals: false` keeps the bounded legacy path.
 
 Protocol 81 gives that explicit selection its own revision-bound SDK/service
 command, so reselecting the same legacy value persists consent for later turns.
 An actual generic autonomy change cannot carry Manual's false marker into
-Autopilot; unrelated edits and loading old history still cannot broaden consent.
+Autonomous; unrelated edits and loading old history still cannot broaden consent.
 
-The current Max decision layer handles delegated technical questions with explicit alternatives and typed steering choices. It does not introduce another permission gate for automatically approved tools. Legacy bounded-Max tool review remains only for retained configurations without the new consent marker. No layer may invent user-only facts or turn an open-ended question into a fabricated user answer. Unclear questions, insufficient confidence, unavailable providers and decisions outside delegation go to the user or leave the operation visibly blocked. Actual automatic approvals have an autonomy actor, never a fabricated human or model approval.
+The current Autopilot decision layer handles delegated technical questions with explicit alternatives and typed steering choices. It does not introduce another permission gate for automatically approved tools. Legacy bounded-Autopilot tool review remains only for retained configurations without the new consent marker. No layer may invent user-only facts or turn an open-ended question into a fabricated user answer. Unclear questions, insufficient confidence, unavailable providers and decisions outside delegation go to the user or leave the operation visibly blocked. Actual automatic approvals have an autonomy actor, never a fabricated human or model approval.
 
 Manual and Guided can remember approvals in session, project or current-profile global scope. Exact commands, conservative simple command families and exact configuration/schema-bound MCP tools are distinct targets. The service derives the target from the actual pending call and atomically appends the grant with the user answer. Denials still win. See [session approvals and GitHub workflows](architecture/session-github-workflows.md) for migration, discovery, source review and cross-client behavior.
 
@@ -858,7 +858,7 @@ Existing Jev restrictions and disabled decision-provider defaults are unchanged.
 
 System One calls return structured predicates, choices, or scores, with probabilities and confidence where supported. Validate the response schema and permitted alternatives; absence of confidence is not certainty, a high score is not authorization, and vendor speed/calibration claims are not Moguri guarantees. Measure thresholds on generated task fixtures before relying on them.
 
-Hosted decision calls need their own approved data destination, scoped secret reference, budget, and network path from the selected env. Treat task content and tool arguments as data, not instructions that can rewrite the decision policy. Persist the question, alternatives, provider/model version, values, confidence semantics, actor, delegation, and applied or rejected outcome. Autopilot Max requires a compatible configured decision provider; it never silently falls back to self-approval by the generative model. See [D12](architecture/decisions.md#d12-system-one-decisions-and-autonomy-levels).
+Hosted decision calls need their own approved data destination, scoped secret reference, budget, and network path from the selected env. Treat task content and tool arguments as data, not instructions that can rewrite the decision policy. Persist the question, alternatives, provider/model version, values, confidence semantics, actor, delegation, and applied or rejected outcome. Autopilot requires a compatible configured decision provider; it never silently falls back to self-approval by the generative model. See [D12](architecture/decisions.md#d12-system-one-decisions-and-autonomy-levels).
 
 ## Milestone acceptance criteria
 
@@ -883,9 +883,9 @@ The first milestone is complete only when all of the following hold:
 - Every state transition and failure produces a useful diagnostic event.
 - Core behavior is covered by unit, integration, migration, restart-recovery, and cross-client contract tests.
 - New sessions default to Local, no model until generative provider/local-model configuration, Manual, and Unlimited. Global/profile/repo/project/session defaults resolve identically across clients without weakening policy.
-- Allowed-env enforcement accepts Sandbox or Remote and rejects new Local turns when Local is excluded. Only Local turns already running at the recorded policy boundary may finish, including when clients race with the setting change.
+- Allowed-env enforcement accepts Sandbox or Remote host and rejects new Local turns when Local is excluded. Only Local turns already running at the recorded policy boundary may finish, including when clients race with the setting change.
 - Missing SendBox prerequisites, launch failure, lost guest readiness, or restart cannot cause host fallback, unprotected model requests, or a falsely successful cleanup.
-- Fixed-model and kupo selection work independently of every autonomy level, env, and budget. Manual is the default; Guided cannot approve without the user, and Autopilot Max works with a fixed model and a configured decision provider.
+- Fixed-model and kupo selection work independently of every autonomy level, env, and budget. Manual is the default; Guided cannot approve without the user, and Autopilot works with a fixed model and a configured decision provider.
 - kupo exercises single, cascade, and critique/revision patterns across generated local/hosted fixtures without violating privacy, capability, budget, workspace, or sandbox constraints. Rejected candidates cannot overwrite the user's worktree.
 - Router, critic, and decision calls are fully accounted for and cancellable. Outages, invalid output, stale decisions, duplicate recovery, or low confidence cannot fabricate approval, replay a side effect, or hide a paid call.
 - Automatic answers and steers retain their real actor and delegation. Human intervention or a policy change wins a race with an outstanding decision, and no model can override a hard denial or a user-only setting.
@@ -933,7 +933,7 @@ Instrument the event pipeline, normalize usage and cost records, add token/USD c
 
 ### Phase 5 — Profiles and extension management
 
-Add profile isolation, secret backends, policy evaluation, profile/repo/project default overrides, plugin manifests, provider management, and runtime health checks. Complete kupo's single/cascade/critique workflows, System One adapters, and delegated Autopilot/Autopilot Max over the same loop, budgets, and cancellation tree. Defaults and model decisions cannot weaken global allowed-env enforcement.
+Add profile isolation, secret backends, policy evaluation, profile/repo/project default overrides, plugin manifests, provider management, and runtime health checks. Complete kupo's single/cascade/critique workflows, System One adapters, and delegated Autonomous/Autopilot over the same loop, budgets, and cancellation tree. Defaults and model decisions cannot weaken global allowed-env enforcement.
 
 ### Phase 6 — Hardening
 
