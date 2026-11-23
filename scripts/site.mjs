@@ -29,7 +29,7 @@ export function siteHeader(root, route) {
 export function siteFooter(root) {
   return `<footer class="site-footer shell">
     <div><a class="footer-brand" href="${home(root)}"><img src="${root}assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>Coding agents on your terms. A macOS alpha.</p></div>
-    <nav aria-label="Footer"><a href="${root}download/">Download</a><a href="${root}docs/">User guide</a><a href="${root}developers/">Developers</a><a href="${root}developers/#source">Source code</a><a href="${root}developers/security.html">Security</a><a href="${root}developers/license.html">MIT License</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source ${external}</a><a href="https://github.com/synctune-io">A Synctune project ${external}</a></nav>
+    <nav aria-label="Footer"><a href="${root}download/">Download</a><a href="${root}docs/">User guide</a><a href="${root}developers/">Developers</a><a href="${root}developers/#source">Source code</a><a href="${root}developers/security.html">Security</a><a href="${root}developers/license.html">MIT License</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source ${external}</a><a href="https://synctune.it">A Synctune project ${external}</a></nav>
   </footer>`;
 }
 
