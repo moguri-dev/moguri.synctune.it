@@ -29,7 +29,7 @@ export function siteHeader(root, route) {
 export function siteFooter(root) {
   return `<footer class="site-footer shell">
     <div><a class="footer-brand" href="${home(root)}"><img src="${root}assets/wordmark.svg" width="128" height="40" alt="Moguri home"></a><p>Coding agents on your terms. A macOS alpha.</p></div>
-    <nav aria-label="Footer"><a href="${root}download/">Download</a><a href="${root}docs/">User guide</a><a href="${root}developers/">Developers</a><a href="${root}developers/#source">Source code</a><a href="${root}developers/security.html">Security</a><a href="${root}developers/license.html">MIT License</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source ${external}</a><a href="https://synctune.it">A Synctune project ${external}</a></nav>
+    <nav aria-label="Footer"><a href="${root}download/">Download</a><a href="${root}docs/">User guide</a><a href="${root}developers/">Developers</a><a href="${root}developers/#source">Source code</a><a href="${root}developers/security">Security</a><a href="${root}developers/license">MIT License</a><a href="https://github.com/moguri-dev/moguri.synctune.it">Site source ${external}</a><a href="https://synctune.it">A Synctune project ${external}</a></nav>
   </footer>`;
 }
 
@@ -114,7 +114,7 @@ export function renderDownloads(data) {
         <p class="section-label">Release status</p>
         <h2 id="release-title">No public release yet</h2>
         <p>The first Moguri release hasn't been published, so there's nothing to download from this site yet. The release process is ready: each release will publish a DMG, an updater ZIP, its manifest, a provenance record and <code>SHA256SUMS</code> to GitHub Releases. Builds are not available from any other source.</p>
-        <p>Follow <a href="https://github.com/moguri-dev">Moguri on GitHub</a> for the release. Until then, read the <a href="../docs/installation.html">installation guide</a> to see exactly what installing will involve.</p>
+        <p>Follow <a href="https://github.com/moguri-dev">Moguri on GitHub</a> for the release. Until then, read the <a href="../docs/installation">installation guide</a> to see exactly what installing will involve.</p>
       </div>`;
   }
   if (isPrivateRepository(data.repository)) {
@@ -137,12 +137,12 @@ export function renderDownloads(data) {
       </div>`;
 }
 
-export function renderSitemap(routes) {
-  const url = (route) => `${origin}/${route.replace(/index\.html$/, "")}`;
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map((route) => `  <url><loc>${url(route)}</loc></url>`).join("\n")}\n</urlset>\n`;
-}
+// The absolute clean URL GitHub Pages serves a route at: "docs/models.html" is /docs/models, "docs/index.html" is /docs/.
+export const canonicalUrl = (route) => `${origin}/${route.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "")}`;
 
-export const canonicalUrl = (route) => `${origin}/${route.replace(/index\.html$/, "")}`;
+export function renderSitemap(routes) {
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map((route) => `  <url><loc>${canonicalUrl(route)}</loc></url>`).join("\n")}\n</urlset>\n`;
+}
 
 // Replaces {{MARKER}} and {{KIND:argument}} markers. Unknown markers fail the build.
 export function fill(template, values, path) {

@@ -17,6 +17,15 @@ const types = {
   ".xml": "application/xml; charset=utf-8",
 };
 
+const isFile = async (path) => {
+  try {
+    return (await stat(path)).isFile();
+  } catch (error) {
+    if (error.code === "ENOENT" || error.code === "ENOTDIR") return false;
+    throw error;
+  }
+};
+
 try {
   if (args.length !== 0 && (args.length !== 2 || args[0] !== "--port")) {
     throw new Error("Usage: node scripts/serve.mjs [--port NUMBER]");
@@ -60,29 +69,30 @@ try {
         }
         throw error;
       }
-      let path = resolve(root, `.${pathname}`);
+      const path = resolve(root, `.${pathname}`);
       if (path !== resolve(root) && !path.startsWith(`${resolve(root)}${sep}`)) {
         send(404, missingPage, types[".html"]);
         return;
       }
-      try {
-        if ((await stat(path)).isDirectory()) {
-          if (!url.pathname.endsWith("/")) {
-            response.writeHead(301, { Location: `${url.pathname}/${url.search}` });
-            response.end();
-            return;
-          }
-          path = join(path, "index.html");
-        }
-        const content = await readFile(path);
-        send(200, content, types[extname(path)] ?? "application/octet-stream");
-      } catch (error) {
-        if (error.code === "ENOENT" || error.code === "ENOTDIR") {
-          send(404, missingPage, types[".html"]);
-          return;
-        }
-        throw error;
+      // Mirrors GitHub Pages: /dir/ serves dir/index.html, /page serves page or page.html,
+      // and /dir redirects to /dir/ when dir/index.html exists.
+      let file;
+      if (pathname.endsWith("/")) {
+        if (await isFile(join(path, "index.html"))) file = join(path, "index.html");
+      } else if (await isFile(path)) {
+        file = path;
+      } else if (path !== resolve(root) && await isFile(`${path}.html`)) {
+        file = `${path}.html`;
+      } else if (await isFile(join(path, "index.html"))) {
+        response.writeHead(301, { Location: `${url.pathname}/${url.search}` });
+        response.end();
+        return;
       }
+      if (!file) {
+        send(404, missingPage, types[".html"]);
+        return;
+      }
+      send(200, await readFile(file), types[extname(file)] ?? "application/octet-stream");
     } catch (error) {
       console.error("Preview request failed:", error);
       send(500, "The preview could not read this website file. Check the server output.");

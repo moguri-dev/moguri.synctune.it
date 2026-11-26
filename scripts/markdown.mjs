@@ -25,15 +25,16 @@ export function createSlugger() {
   };
 }
 
-// A relative URL from one published route to another. Index pages use their directory URL.
+// A relative clean URL from one published route to another, the way GitHub Pages serves it:
+// index pages use their directory URL with a trailing slash, other pages drop ".html".
 export function routeHref(fromRoute, toRoute, hash = "") {
   if (toRoute === fromRoute && hash) return hash;
   const fromDirectory = posix.dirname(fromRoute);
-  if (toRoute.endsWith("index.html")) {
+  if (posix.basename(toRoute) === "index.html") {
     const relative = posix.relative(fromDirectory, posix.dirname(toRoute));
     return `${relative ? `${relative}/` : "./"}${hash}`;
   }
-  return `${posix.relative(fromDirectory, toRoute)}${hash}`;
+  return `${posix.relative(fromDirectory, toRoute).replace(/\.html$/, "")}${hash}`;
 }
 
 function isPrivateGitHub(url) {

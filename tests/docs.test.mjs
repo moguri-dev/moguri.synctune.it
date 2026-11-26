@@ -33,15 +33,17 @@ test("heading anchors match GitHub's, including duplicates and punctuation", () 
 
 test("links resolve to published routes from both guides and synced documents", () => {
   const { content } = guide("# Getting started\n\n[Models](models.md#choose-a-model) [Install](../../vendor/moguri/docs/installation.md#first-use) [Download](../../download/index.html) [Top](#install)");
-  assert.ok(content.includes('href="models.html#choose-a-model"'));
-  assert.ok(content.includes('href="installation.html#first-use"'));
+  assert.ok(content.includes('href="models#choose-a-model"'));
+  assert.ok(content.includes('href="installation#first-use"'));
   assert.ok(content.includes('href="../download/"'));
   assert.ok(content.includes('href="#install"'));
   const synced = upstream("# General\n\n[Settings](README.md) [Install](../installation.md#upgrade) [Mail](mailto:demo@example.test)").content;
   assert.ok(synced.includes('href="./"'));
-  assert.ok(synced.includes('href="../installation.html#upgrade"'));
+  assert.ok(synced.includes('href="../installation#upgrade"'));
   assert.ok(synced.includes('href="mailto:demo@example.test"'));
   assert.equal(routeHref("docs/settings/general.html", "index.html", "#features"), "../../#features");
+  assert.equal(routeHref("docs/settings/general.html", "developers/security.html"), "../../developers/security");
+  assert.equal(routeHref("docs/index.html", "docs/settings/index.html"), "settings/");
 });
 
 test("references to private repositories and unpublished files become marked plain text", () => {
@@ -107,11 +109,12 @@ test("downloads render only real assets of a published release in a public repos
   assert.throws(() => renderDownloads({ releases: [] }), /repository/);
 });
 
-test("the sitemap lists directory URLs for index pages", () => {
+test("the sitemap lists clean URLs: directories for index pages, no .html for others", () => {
   const sitemap = renderSitemap(["index.html", "docs/index.html", "docs/models.html"]);
   assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/</loc>"));
   assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/docs/</loc>"));
-  assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/docs/models.html</loc>"));
+  assert.ok(sitemap.includes("<loc>https://moguri.synctune.it/docs/models</loc>"));
+  assert.doesNotMatch(sitemap, /\.html</);
 });
 
 for (const page of guidePages) {
