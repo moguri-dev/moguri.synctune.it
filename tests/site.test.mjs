@@ -7,7 +7,7 @@ import { checkLocalLinks } from "../scripts/links.mjs";
 const root = new URL("../dist/", import.meta.url);
 const pages = [...templatePages, ...guidePages.map((page) => page.route), ...canonicalPages.map((page) => page.route)];
 const read = (path) => readFile(new URL(path, root), "utf8");
-const canonicalOf = (page) => `${origin}/${page.replace(/index\.html$/, "")}`;
+const canonicalOf = (page) => `${origin}/${page.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "")}`;
 
 for (const page of pages) {
   test(`${page} has accessible page structure and metadata`, async () => {
@@ -50,10 +50,21 @@ test("every local link, asset and anchor in the build exists", async () => {
   assert.deepEqual(problems, []);
 });
 
-test("the link checker reports missing files and anchors", async () => {
+test("the link checker resolves clean URLs and reports missing files, anchors and old URLs", async () => {
   const fixture = new URL("fixtures/links/", import.meta.url);
   const { problems, externals } = await checkLocalLinks(fixture.pathname, ["index.html"]);
-  assert.deepEqual(problems, ["index.html: missing anchor #nowhere", "index.html: missing other.html", "index.html: missing anchor page.html#gone", "index.html: insecure or unsupported URL http://example.test/"]);
+  assert.deepEqual(problems, [
+    "index.html: missing anchor #nowhere",
+    "index.html: missing other",
+    "index.html: missing anchor page#gone",
+    "index.html: missing page/",
+    "index.html: missing anchor guide/#gone",
+    'index.html: links to directory guide without a trailing slash; add "/" because GitHub Pages redirects it',
+    'index.html: links to page.html#here with ".html"; use the clean URL page#here',
+    'index.html: links to index.html with ".html"; use the clean URL ./',
+    'index.html: links to guide/index.html with ".html"; use the clean URL guide/',
+    "index.html: insecure or unsupported URL http://example.test/",
+  ]);
   assert.deepEqual([...externals.keys()], ["https://example.test/ok"]);
 });
 

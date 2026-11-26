@@ -1,4 +1,4 @@
-// Checks every local link in dist/ and requests every external URL, including download links.
+// Checks every local link in dist/ with GitHub Pages clean URLs (see links.mjs) and requests every external URL, including download links.
 // Run after `npm run build`. Needs network access, so it isn't part of `npm test`.
 import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";

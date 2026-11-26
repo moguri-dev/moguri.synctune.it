@@ -68,11 +68,11 @@
 
       <section class="docs-section" id="availability" aria-labelledby="availability-title">
         <h2 id="availability-title">What's available</h2>
-        <p>Moguri {{VERSION}} is an alpha for macOS on Apple silicon. <a href="features.html">Implemented capabilities</a> records what works, and the <a href="roadmap.html">roadmap</a> lists what's still missing. The <a href="vision.html">product vision</a> describes much more than the app does today; don't read it as a feature list.</p>
+        <p>Moguri {{VERSION}} is an alpha for macOS on Apple silicon. <a href="features">Implemented capabilities</a> records what works, and the <a href="roadmap">roadmap</a> lists what's still missing. The <a href="vision">product vision</a> describes much more than the app does today; don't read it as a feature list.</p>
         <div class="docs-callout">No public release has been published yet. The <a href="../download/">download page</a> shows the current status.</div>
         <h3>Common questions</h3>
-        <details class="faq"><summary>Can I use a local model?</summary><p>Yes. Start an OpenAI-compatible server yourself, such as Ollama or llama.cpp, then add its endpoint and declare the model's limits. Moguri never scans hosts, downloads weights or picks a model for you. See <a href="settings/local-models.html">Local models</a>.</p></details>
-        <details class="faq"><summary>Is remote execution sandboxed?</summary><p>No. Remote runs on the SSH machine you chose, with that machine's access. Sandbox containment needs the separate Sandbox environment and its reviewed setup. See <a href="execution.html">permissions and execution</a>.</p></details>
+        <details class="faq"><summary>Can I use a local model?</summary><p>Yes. Start an OpenAI-compatible server yourself, such as Ollama or llama.cpp, then add its endpoint and declare the model's limits. Moguri never scans hosts, downloads weights or picks a model for you. See <a href="settings/local-models">Local models</a>.</p></details>
+        <details class="faq"><summary>Is remote execution sandboxed?</summary><p>No. Remote runs on the SSH machine you chose, with that machine's access. Sandbox containment needs the separate Sandbox environment and its reviewed setup. See <a href="execution">permissions and execution</a>.</p></details>
         <details class="faq"><summary>Does Moguri work on Intel Macs, Linux or Windows?</summary><p>Not as a release. Builds exist only for macOS on Apple silicon.</p></details>
         <details class="faq"><summary>Are the screenshots real?</summary><p>Yes. They come from Moguri's own automated capture test, which runs the {{VERSION}} desktop app with generated projects, conversations and models. The terminal preview on the homepage is an illustration.</p></details>
       </section>

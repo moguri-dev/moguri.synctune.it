@@ -23,6 +23,21 @@ The build publishes the user guide under `/docs/`, the developer docs under
 Only catalogued pages publish. Markdown sources, templates, `vendor/`, `data/`
 and scripts stay out of `dist/`.
 
+### Clean URLs
+
+Pages keep their `.html` files, but every link uses the clean URL GitHub Pages
+serves: `docs/models.html` is linked as `docs/models` and
+`https://moguri.synctune.it/docs/models`, and `docs/settings/index.html` as
+`docs/settings/`. This applies to template links, the header, footer and
+sidebars, links rewritten from Markdown, canonical and `og:url` tags and the
+sitemap. Keep relative links relative. GitHub Pages serves `/docs/models` from
+`docs/models.html`, redirects `/docs` to `/docs/` and returns 404 for
+`/docs/models/`. Old `.html` URLs keep working.
+
+The build and `npm test` reject internal links that end in `.html` or
+`index.html`, and links to a directory without its trailing slash (`docs`
+instead of `docs/`), because Pages answers those with a redirect.
+
 ## Local setup and preview
 
 ```sh
@@ -31,9 +46,12 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:4173`. The preview binds only to loopback and serves
-`dist/`, not source files. Stop it with Ctrl+C and rerun `npm run dev` after
-editing. `node scripts/serve.mjs --port 4174` previews an existing build on
-another port.
+`dist/`, not source files. It follows GitHub Pages' URL rules: `/docs/models`
+serves `docs/models.html`, `/docs/` serves `docs/index.html`, `/docs`
+redirects to `/docs/`, `.html` URLs still work, and anything else returns the
+404 page. Stop it with Ctrl+C and rerun `npm run dev` after editing.
+`node scripts/serve.mjs --port 4174` previews an existing build on another
+port.
 
 ## Checks
 
@@ -44,10 +62,10 @@ npm run check:links
 ```
 
 `npm test` checks JavaScript syntax, builds the site and runs the Node tests:
-page structure and metadata, every local link and anchor, the sitemap, the
-alpha status line, source notes on synced pages, the download page, the
-Markdown renderer, release rendering, and the integrity of `vendor/moguri/`
-against `SOURCE.json`.
+page structure and metadata, every local link and anchor (using clean URLs),
+the sitemap, the alpha status line, source notes on synced pages, the download
+page, the Markdown renderer, release rendering, and the integrity of
+`vendor/moguri/` against `SOURCE.json`.
 
 `npm run test:browser` starts its own loopback preview on port 4187. It checks
 keyboard navigation, the interface tabs, the docs sidebars, layouts from 320px
@@ -128,7 +146,8 @@ Each guide in `docs/usage/` has one H1 matching its catalogue title. Heading
 anchors follow GitHub's rules, so the same links work on GitHub and on the site.
 Link to other pages with relative Markdown paths, for example
 `models.md#choose-a-model` or `../../vendor/moguri/docs/installation.md`. The
-build fails on links to unpublished files.
+build turns them into clean URLs such as `models#choose-a-model` and fails on
+links to unpublished files.
 
 Keep implemented capabilities separate from the roadmap and the product
 vision. Where a guide summarizes a setting, link to its Settings reference page

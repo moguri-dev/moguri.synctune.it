@@ -2,9 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { canonicalPages, guidePages, templatePages } from "../scripts/catalogue.mjs";
 
-const url = (route) => `/${route.replace(/index\.html$/, "")}`;
+const url = (route) => `/${route.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "")}`;
 const pages = [...templatePages.filter((route) => route !== "404.html"), ...guidePages.map((page) => page.route), ...canonicalPages.map((page) => page.route)].map(url);
-const representative = ["/", "/download/", "/docs/", "/developers/", "/docs/getting-started.html", "/docs/installation.html", "/docs/settings/", "/docs/settings/general.html", "/docs/features.html", "/developers/sdk.html", "/developers/sdk-reference.html", "/404.html"];
+const representative = ["/", "/download/", "/docs/", "/developers/", "/docs/getting-started", "/docs/installation", "/docs/settings/", "/docs/settings/general", "/docs/features", "/developers/sdk", "/developers/sdk-reference", "/404.html"];
 
 async function overlaps(page) {
   return page.evaluate(() => {
@@ -103,12 +103,12 @@ test("interface tabs support mouse and the complete keyboard pattern", async ({ 
 });
 
 test("docs sidebars open on wide screens, collapse on small ones and work with a keyboard", async ({ page }) => {
-  await page.goto("/docs/settings/general.html");
+  await page.goto("/docs/settings/general");
   const guideMenu = page.locator("details.docs-menu").first();
   await expect(guideMenu).toHaveAttribute("open", "");
   await expect(page.getByRole("navigation", { name: "Settings pages" }).getByRole("link", { name: "General", exact: true })).toHaveAttribute("aria-current", "page");
   await page.getByRole("navigation", { name: "Settings pages" }).getByRole("link", { name: "Voice dictation", exact: true }).click();
-  await expect(page).toHaveURL(/\/docs\/settings\/voice-dictation\.html$/);
+  await expect(page).toHaveURL(/\/docs\/settings\/voice-dictation$/);
   await page.getByRole("navigation", { name: "On this page" }).getByRole("link").first().click();
   await expect(page).toHaveURL(/#[\w-]+$/);
 
@@ -120,7 +120,7 @@ test("docs sidebars open on wide screens, collapse on small ones and work with a
   await summary.press("Enter");
   await expect(page.locator("details.docs-menu")).toHaveAttribute("open", "");
   await page.getByRole("navigation", { name: "User guide" }).getByRole("link", { name: "Installation", exact: true }).click();
-  await expect(page).toHaveURL(/\/docs\/installation\.html$/);
+  await expect(page).toHaveURL(/\/docs\/installation$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Installing, upgrading and removing Moguri");
 });
 
@@ -144,12 +144,12 @@ test("the download page is honest about availability and first launch", async ({
   await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Open it the first time" }).click();
   await expect(page.getByRole("heading", { name: "Open it the first time" })).toBeInViewport();
   await page.getByRole("link", { name: "macOS launch troubleshooting" }).click();
-  await expect(page).toHaveURL(/\/docs\/installation\.html#macos-launch-troubleshooting$/);
+  await expect(page).toHaveURL(/\/docs\/installation#macos-launch-troubleshooting$/);
   await expect(page.getByRole("heading", { name: "macOS launch troubleshooting" })).toBeInViewport();
 });
 
 test("references to the private source repository are marked, not linked", async ({ page }) => {
-  await page.goto("/docs/installation.html");
+  await page.goto("/docs/installation");
   const reference = page.locator(".doc-private").first();
   await expect(reference).toContainText("(not public yet)");
   await expect(reference.locator("a")).toHaveCount(0);
@@ -247,7 +247,7 @@ for (const path of [...pages, "/404.html"]) {
 
 test("small-screen layouts meet automated WCAG AA checks", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  for (const path of ["/", "/download/", "/docs/", "/docs/settings/general.html", "/developers/"]) {
+  for (const path of ["/", "/download/", "/docs/", "/docs/settings/general", "/developers/"]) {
     await page.goto(path);
     await page.evaluate(() => document.fonts.ready);
     const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
@@ -263,7 +263,13 @@ test("the preview serves correct errors and never publishes source files", async
   const directory = await request.get("/docs?topic=models", { maxRedirects: 0 });
   expect(directory.status()).toBe(301);
   expect(directory.headers().location).toBe("/docs/?topic=models");
-  for (const path of ["/not-a-page", "/missing/nested/page", "/package.json", "/README.md", "/docs/development.md", "/docs/layout.html", "/docs/usage/getting-started.md", "/vendor/moguri/SOURCE.json", "/vendor/moguri/docs/installation.md", "/data/releases.json", "/scripts/catalogue.mjs", "/.git/config", "/tests/site.test.mjs", "/%2e%2e%2fpackage.json"]) {
+  for (const path of ["/docs/settings/", "/docs/settings/general", "/docs/settings/general.html"]) {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), path).toBe(200);
+    expect(response.headers()["content-type"], path).toContain("text/html");
+  }
+  expect(await (await request.get("/docs/settings/general")).text()).toContain("<h1>General</h1>");
+  for (const path of ["/not-a-page", "/docs/settings/general/", "/assets", "/docs/index.html/", "/missing/nested/page", "/package.json", "/README.md", "/docs/development.md", "/docs/layout.html", "/docs/usage/getting-started.md", "/vendor/moguri/SOURCE.json", "/vendor/moguri/docs/installation.md", "/data/releases.json", "/scripts/catalogue.mjs", "/.git/config", "/tests/site.test.mjs", "/%2e%2e%2fpackage.json"]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(404);
     expect(await response.text()).toContain("<h1>Page not found</h1>");
